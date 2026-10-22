@@ -1,0 +1,227 @@
+/* Hlasovna valné hromady (Supabase) a spodní přehrávač dechovky (Spotify).
+ * Nastavení je v config.js. Id otázek, možností a jména v CREW musí sedět se supabase/schema.sql. */
+var CFG = window.HON_CONFIG || {};
+var SUPABASE_URL = CFG.supabaseUrl || '';
+var SUPABASE_KEY = CFG.supabaseKey || '';
+
+(function () {
+  // --- Dechovka v doku: hraje popořadě a po posledním kusu zase od Rosamunde ---
+  var TRACKS = [
+    ['6FT3Zcgo1RkVmBcqyLsdyb', 'Rosamunde', 'Peter Alexander'],
+    ['2Gra5abgzOrtL8bxx3XDOm', 'Böhmischer Traum', 'Die Innsbrucker Böhmische'],
+    ['7gfCRmKIC6pKdOXhGPa8v3', 'Škoda lásky', 'Vejvodova kapela'],
+    ['4gr49XsRR5AbpihGZmIUAS', 'Egerländer Musikantenmarsch', 'Ernst Mosch'],
+    ['4pYwTYhwmBKfalocihRrlb', 'Auf der Vogelwiese', 'Ernst Mosch'],
+    ['6C7qI1CiQtNPdAxkzgkQPw', 'Erzherzog-Johann-Jodler-Marsch', 'Musikverein Dechantskirchen'],
+    ['1a2W0n1Z43jDBm4xT4y79s', 'Alter Jägermarsch', 'Blasmusikverein St. Hubertus']
+  ];
+  var dock = document.getElementById('dock');
+  var slot = document.getElementById('dock-frame');
+  var pick = document.getElementById('dock-track');
+  var link = document.getElementById('dock-link');
+  var cur = 0, ctl = null, frame = null, booted = false, playing = false;
+
+  TRACKS.forEach(function (t, i) {
+    var o = document.createElement('option');
+    o.value = String(i); o.textContent = (i + 1) + '. ' + t[1] + ' · ' + t[2];
+    pick.appendChild(o);
+  });
+  function embedUrl(i) { return 'https://open.spotify.com/embed/track/' + TRACKS[i][0] + '?utm_source=generator'; }
+  function fit() { document.body.style.paddingBottom = dock.hidden ? '' : (dock.offsetHeight + 16) + 'px'; }
+
+  function setTrack(i, autoplay) {
+    cur = (i + TRACKS.length) % TRACKS.length;
+    playing = false;
+    pick.value = String(cur);
+    link.href = 'https://open.spotify.com/track/' + TRACKS[cur][0];
+    if (ctl) { ctl.loadUri('spotify:track:' + TRACKS[cur][0]); if (autoplay) ctl.play(); }
+    else if (frame) frame.src = embedUrl(cur);
+  }
+  // Bez iFrame API od Spotify (blokované, pomalé) zůstane obyčejný embed, jen bez přechodu na další kus.
+  function plainEmbed() {
+    if (ctl || frame) return;
+    frame = document.createElement('iframe');
+    frame.title = 'Dechovka ze Spotify';
+    frame.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+    frame.src = embedUrl(cur);
+    slot.parentNode.replaceChild(frame, slot);
+  }
+  function boot() {
+    booted = true;
+    var fallback = setTimeout(plainEmbed, 5000);
+    window.onSpotifyIframeApiReady = function (api) {
+      if (frame) return;
+      clearTimeout(fallback);
+      api.createController(slot, { uri: 'spotify:track:' + TRACKS[cur][0], width: '100%', height: 80 }, function (c) {
+        ctl = c;
+        c.addListener('ready', function () { c.play(); fit(); });
+        // Konec kusu Spotify hlásí jen pozicí rovnou délce (pauzu ne). Zprávy od předchozího kusu se ignorují.
+        c.addListener('playback_update', function (e) {
+          var d = e.data || {};
+          if (d.playingURI && d.playingURI !== 'spotify:track:' + TRACKS[cur][0]) return;
+          if (!d.isPaused && d.position > 0) playing = true;
+          if (playing && d.duration > 0 && d.position >= d.duration - 500) setTrack(cur + 1, true);
+        });
+      });
+    };
+    var s = document.createElement('script');
+    s.src = 'https://open.spotify.com/embed/iframe-api/v1';
+    s.async = true;
+    s.onerror = function () { clearTimeout(fallback); plainEmbed(); };
+    document.head.appendChild(s);
+  }
+  function openDock(ev) {
+    if (ev) ev.preventDefault();
+    dock.hidden = false; fit();
+    if (!booted) boot();
+    else if (ctl) ctl.resume();
+    else if (frame && !frame.getAttribute('src')) frame.src = embedUrl(cur);
+  }
+  var opener = document.getElementById('rosamunde-open');
+  if (opener) opener.addEventListener('click', openDock);
+  pick.addEventListener('change', function () { setTrack(+pick.value, true); });
+  document.getElementById('dock-prev').addEventListener('click', function () { setTrack(cur - 1, true); });
+  document.getElementById('dock-next').addEventListener('click', function () { setTrack(cur + 1, true); });
+  document.getElementById('dock-close').addEventListener('click', function () {
+    if (ctl) ctl.pause();
+    else if (frame) frame.removeAttribute('src');
+    dock.hidden = true; fit();
+  });
+  window.addEventListener('resize', fit);
+
+  // --- Hlasovna ---
+  var CREW = ['Mari', 'Smeky', 'Lencoš', 'Gregy', 'Jindřich', 'Pavel', 'Vlasta'];
+  var QUORUM = 4;
+  var QUESTIONS = [
+    { id: 'odjezd', title: 'Usnesení č. 1: odjezd z Prahy', options: [
+      ['ct', 'Čtvrtek po obědě · Krügerl na přivítání, noc v Seewiesenu'],
+      ['pa', 'Pátek v 5:00 · rovnou na trasu, střízlivě'] ] },
+    { id: 'termin', title: 'Usnesení č. 2: termín 2027 (pá–ne, při čtvrtku o den dřív)', options: [
+      ['18-20-6', '18.–20. 6.'], ['25-27-6', '25.–27. 6.'], ['11-13-6', '11.–13. 6.'] ] },
+    { id: 'lec1', orient: true, title: 'Usnesení č. 3, orientační: 1. leč, kudy na Fölzalm', options: [
+      ['1A', '1A Ondrova trasa · 11,4 km · 5:12 h'],
+      ['1B', '1B Totéž + odbočka na Windgrube a Schönleitenhaus · 14,9 km · 6:10 h'],
+      ['1C', '1C Ondrův oblouk přes Fölzklamm · 16,6 km · 8:30 h · jen při čtvrtku'] ] },
+    { id: 'lec2', orient: true, title: 'Usnesení č. 4, orientační: 2. leč, co s vrcholem', options: [
+      ['2A', '2A Klasika: k chatě, vrchol nalehko'],
+      ['2B', "2B Klasika + G'hacktkogel · +1:20 h"],
+      ['2C', '2C Klasika + Ringkamp · +2:45 h'],
+      ['2D', '2D Žebříky rovnou na vrchol'] ] },
+    { id: 'pivo', title: 'Usnesení č. 5: první Krügerl', options: [
+      ['gosser', 'Gösser Märzen'], ['murauer', 'Murauer Märzen'], ['puntigamer', 'Puntigamer'],
+      ['zwickl', 'Zwickl'], ['radler', 'Radler'], ['himbeer', 'Himbeerkracherl (řidič)'] ] }
+  ];
+  var root = document.getElementById('hlasovna');
+  if (!root || !SUPABASE_URL || !SUPABASE_KEY) return;   // bez nastavení zůstávají jen ankety do WhatsAppu
+
+  var base = SUPABASE_URL.replace(/\/+$/, '') + '/rest/v1/votes';
+  function headers(extra) {
+    var h = { apikey: SUPABASE_KEY, 'Content-Type': 'application/json' };
+    if (SUPABASE_KEY.indexOf('eyJ') === 0) h.Authorization = 'Bearer ' + SUPABASE_KEY;
+    for (var k in extra) h[k] = extra[k];
+    return h;
+  }
+  var votes = [];   // {question, voter, option}
+  var me = '';
+  try { me = localStorage.getItem('hon-hochschwab-voter') || ''; } catch (e) {}
+  if (CREW.indexOf(me) < 0) me = '';
+  var busy = false, lastLoad = null, statusMsg = '', statusErr = false;
+
+  function el(tag, attrs, kids) {
+    var n = document.createElement(tag);
+    if (attrs) for (var k in attrs) {
+      if (k === 'text') n.textContent = attrs[k];
+      else if (k === 'class') n.className = attrs[k];
+      else if (k.indexOf('on') === 0) n.addEventListener(k.slice(2), attrs[k]);
+      else n.setAttribute(k, attrs[k]);
+    }
+    (kids || []).forEach(function (c) { if (c) n.appendChild(c); });
+    return n;
+  }
+  function setStatus(msg, err) { statusMsg = msg; statusErr = !!err; render(); }
+  function hlasy(n) { return n === 1 ? '1 hlas' : n + ' hlasy'; }
+
+  function render() {
+    root.hidden = false;
+    root.textContent = '';
+    root.appendChild(el('h3', { text: 'Hlasovna valné hromady' }));
+    var sel = el('select', { id: 'hv-voter', onchange: function (e) {
+      me = e.target.value;
+      try { localStorage.setItem('hon-hochschwab-voter', me); } catch (err) {}
+      render();
+    } }, [el('option', { value: '', text: 'vyber se' })].concat(CREW.map(function (n) {
+      var o = el('option', { value: n, text: n }); if (n === me) o.selected = true; return o;
+    })));
+    root.appendChild(el('div', { class: 'hv-who' }, [
+      el('label', { for: 'hv-voter', text: 'Kdo hlasuje:' }), sel,
+      el('span', { class: 'hv-status', text: me ? 'Klikni na možnost. Hlas jde kdykoli změnit.' : 'Nejdřív se vyber, pak klikej.' })
+    ]));
+    // Prezenční listina: kolik usnesení kdo odhlasoval, ať je koho popohnat ve WhatsAppu
+    var all = QUESTIONS.length, full = 0;
+    var chips = CREW.map(function (n) {
+      var c = QUESTIONS.filter(function (q) { return votes.some(function (v) { return v.voter === n && v.question === q.id; }); }).length;
+      if (c === all) full += 1;
+      return el('span', { class: 'hv-chip' + (c === all ? ' done' : (c ? '' : ' none')), text: n + ' ' + c + '/' + all });
+    });
+    root.appendChild(el('div', { class: 'hv-roll' }, [el('span', { class: 'hv-roll-h', text: 'Prezenční listina' })].concat(chips)));
+    if (lastLoad && full === CREW.length) root.appendChild(el('p', { class: 'hv-status', text: 'Odhlasováno do posledního myslivce. Sepp chystá oznámení.' }));
+    QUESTIONS.forEach(function (q) {
+      var qv = votes.filter(function (v) { return v.question === q.id; });
+      var voters = qv.length;
+      var counts = {};
+      qv.forEach(function (v) { (counts[v.option] = counts[v.option] || []).push(v.voter); });
+      var max = 0, leaders = [];
+      q.options.forEach(function (o) { var c = (counts[o[0]] || []).length; if (c > max) { max = c; leaders = [o]; } else if (c === max && c > 0) leaders.push(o); });
+      var state = 'Hlasovalo ' + voters + ' ze 7', ok = false;
+      if (voters > 0 && voters < QUORUM) state += ', do usnesení chybí ' + hlasy(QUORUM - voters);
+      else if (voters >= QUORUM && max > 0) {
+        if (leaders.length === 1) { state = (q.orient ? 'Orientačně vede: ' : 'Platí: ') + leaders[0][1].split(' · ')[0]; ok = true; }
+        else state = q.orient ? 'Rovnost, rozhodne se na místě' : 'Rovnost, rozhoduje Jindřich';
+      }
+      var mine = (qv.filter(function (v) { return v.voter === me; })[0] || {}).option;
+      var opts = q.options.map(function (o) {
+        var who = counts[o[0]] || [];
+        var pct = Math.round(who.length / 7 * 100);
+        var b = el('button', { type: 'button', class: 'hv-opt' + (mine === o[0] ? ' mine' : ''), 'aria-pressed': mine === o[0] ? 'true' : 'false',
+          onclick: function () { castVote(q.id, o[0]); } }, [
+          el('span', { class: 'bar', style: 'width:' + pct + '%' }),
+          el('span', { text: o[1] }),
+          el('span', { class: 'who', text: who.length ? who.length + ' · ' + who.join(', ') : '0' })
+        ]);
+        if (!me || busy) b.disabled = true;
+        return b;
+      });
+      root.appendChild(el('div', { class: 'hv-q' }, [
+        el('div', { class: 'hv-q-head' }, [el('b', { text: q.title }), el('span', { class: 'hv-q-state' + (ok ? ' ok' : ''), text: state })]),
+        el('div', { class: 'hv-opts' }, opts)
+      ]));
+    });
+    var stamp = lastLoad ? 'Stav z ' + lastLoad.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' }) + ', obnovuje se samo.' : 'Načítám hlasy…';
+    root.appendChild(el('p', { class: 'hv-status' + (statusErr ? ' err' : ''), role: 'status', text: statusMsg || stamp }));
+  }
+
+  function load() {
+    return fetch(base + '?select=question,voter,option', { headers: headers() })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (rows) { votes = rows; lastLoad = new Date(); if (!busy) { statusMsg = ''; statusErr = false; } render(); })
+      .catch(function () { setStatus('Hlasy se nepodařilo načíst. Zkontroluj připojení, nebo hlasuj zatím přes WhatsApp níž.', true); });
+  }
+  function castVote(question, option) {
+    if (!me || busy) return;
+    busy = true; setStatus('Ukládám hlas…');
+    fetch(base + '?on_conflict=question,voter', {
+      method: 'POST',
+      headers: headers({ Prefer: 'resolution=merge-duplicates,return=minimal' }),
+      body: JSON.stringify([{ question: question, voter: me, option: option, updated_at: new Date().toISOString() }])
+    }).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      busy = false; statusMsg = ''; return load();
+    }).catch(function () {
+      busy = false; setStatus('Hlas se neuložil. Zkus to znovu za chvíli.', true);
+    });
+  }
+  render();
+  load();
+  setInterval(function () { if (!document.hidden && !busy) load(); }, 20000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && !busy) load(); });
+})();
