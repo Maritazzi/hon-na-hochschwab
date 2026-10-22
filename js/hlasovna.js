@@ -6,14 +6,15 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
 
 (function () {
   // --- Dechovka v doku: hraje popořadě a po posledním kusu zase od Rosamunde ---
+  // [Spotify id, název, interpret, id možnosti v usnesení o hymně (musí sedět se supabase/schema.sql)]
   var TRACKS = [
-    ['6FT3Zcgo1RkVmBcqyLsdyb', 'Rosamunde', 'Peter Alexander'],
-    ['2Gra5abgzOrtL8bxx3XDOm', 'Böhmischer Traum', 'Die Innsbrucker Böhmische'],
-    ['7gfCRmKIC6pKdOXhGPa8v3', 'Škoda lásky', 'Vejvodova kapela'],
-    ['4gr49XsRR5AbpihGZmIUAS', 'Egerländer Musikantenmarsch', 'Ernst Mosch'],
-    ['4pYwTYhwmBKfalocihRrlb', 'Auf der Vogelwiese', 'Ernst Mosch'],
-    ['6C7qI1CiQtNPdAxkzgkQPw', 'Erzherzog-Johann-Jodler-Marsch', 'Musikverein Dechantskirchen'],
-    ['1a2W0n1Z43jDBm4xT4y79s', 'Alter Jägermarsch', 'Blasmusikverein St. Hubertus']
+    ['6FT3Zcgo1RkVmBcqyLsdyb', 'Rosamunde', 'Peter Alexander', 'rosamunde'],
+    ['2Gra5abgzOrtL8bxx3XDOm', 'Böhmischer Traum', 'Die Innsbrucker Böhmische', 'traum'],
+    ['7gfCRmKIC6pKdOXhGPa8v3', 'Škoda lásky', 'Vejvodova kapela', 'skoda'],
+    ['4gr49XsRR5AbpihGZmIUAS', 'Egerländer Musikantenmarsch', 'Ernst Mosch', 'eger'],
+    ['4pYwTYhwmBKfalocihRrlb', 'Auf der Vogelwiese', 'Ernst Mosch', 'vogelwiese'],
+    ['6C7qI1CiQtNPdAxkzgkQPw', 'Erzherzog-Johann-Jodler-Marsch', 'Musikverein Dechantskirchen', 'johann'],
+    ['1a2W0n1Z43jDBm4xT4y79s', 'Alter Jägermarsch', 'Blasmusikverein St. Hubertus', 'jager']
   ];
   var dock = document.getElementById('dock');
   var slot = document.getElementById('dock-frame');
@@ -23,9 +24,16 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
 
   TRACKS.forEach(function (t, i) {
     var o = document.createElement('option');
-    o.value = String(i); o.textContent = (i + 1) + '. ' + t[1] + ' · ' + t[2];
+    o.value = String(i);
     pick.appendChild(o);
   });
+  // Hymna honu (usnesení č. 6) dostane v seznamu korunku
+  function labelTracks(hymn) {
+    TRACKS.forEach(function (t, i) {
+      pick.options[i].textContent = (i + 1) + '. ' + (t[3] === hymn ? '👑 ' : '') + t[1] + ' · ' + t[2];
+    });
+  }
+  labelTracks('');
   function embedUrl(i) { return 'https://open.spotify.com/embed/track/' + TRACKS[i][0] + '?utm_source=generator'; }
   function fit() { document.body.style.paddingBottom = dock.hidden ? '' : (dock.offsetHeight + 16) + 'px'; }
 
@@ -98,18 +106,23 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
       ['pa', 'Pátek v 5:00 · rovnou na trasu, střízlivě'] ] },
     { id: 'termin', title: 'Usnesení č. 2: termín 2027 (pá–ne, při čtvrtku o den dřív)', options: [
       ['18-20-6', '18.–20. 6.'], ['25-27-6', '25.–27. 6.'], ['11-13-6', '11.–13. 6.'] ] },
-    { id: 'lec1', orient: true, title: 'Usnesení č. 3, orientační: 1. leč, kudy na Fölzalm', options: [
+    { id: 'lec1', mood: true, title: 'Usnesení č. 3, nezávazné: 1. leč, kudy na Fölzalm', options: [
       ['1A', '1A Ondrova trasa · 11,4 km · 5:12 h'],
       ['1B', '1B Totéž + odbočka na Windgrube a Schönleitenhaus · 14,9 km · 6:10 h'],
       ['1C', '1C Ondrův oblouk přes Fölzklamm · 16,6 km · 8:30 h · jen při čtvrtku'] ] },
-    { id: 'lec2', orient: true, title: 'Usnesení č. 4, orientační: 2. leč, co s vrcholem', options: [
+    { id: 'lec2', mood: true, title: 'Usnesení č. 4, nezávazné: 2. leč, co s vrcholem', options: [
       ['2A', '2A Klasika: k chatě, vrchol nalehko'],
       ['2B', "2B Klasika + G'hacktkogel · +1:20 h"],
       ['2C', '2C Klasika + Ringkamp · +2:45 h'],
       ['2D', '2D Žebříky rovnou na vrchol'] ] },
     { id: 'pivo', title: 'Usnesení č. 5: první Krügerl', options: [
       ['gosser', 'Gösser Märzen'], ['murauer', 'Murauer Märzen'], ['puntigamer', 'Puntigamer'],
-      ['zwickl', 'Zwickl'], ['radler', 'Radler'], ['himbeer', 'Himbeerkracherl (řidič)'] ] }
+      ['zwickl', 'Zwickl'], ['radler', 'Radler'], ['himbeer', 'Himbeerkracherl (řidič)'] ] },
+    { id: 'hymna', title: 'Usnesení č. 6: hymna honu', options: TRACKS.map(function (t) { return [t[3], t[1] + ' · ' + t[2]]; }) },
+    { id: 'vychod', title: 'Usnesení č. 7: na východ slunce na vrchol (4:51)', options: [
+      ['vsichni', 'Všichni nahoru · budíček ve čtyři'],
+      ['dobrovolnici', 'Jen dobrovolníci · ostatní spí'],
+      ['spime', 'Spíme · Sepp to vyfotí'] ] }
   ];
   var root = document.getElementById('hlasovna');
   if (!root || !SUPABASE_URL || !SUPABASE_KEY) return;   // bez nastavení zůstávají jen ankety do WhatsAppu
@@ -165,6 +178,7 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
     });
     root.appendChild(el('div', { class: 'hv-roll' }, [el('span', { class: 'hv-roll-h', text: 'Prezenční listina' })].concat(chips)));
     if (lastLoad && full === CREW.length) root.appendChild(el('p', { class: 'hv-status', text: 'Odhlasováno do posledního myslivce. Sepp chystá oznámení.' }));
+    var hymn = '';
     QUESTIONS.forEach(function (q) {
       var qv = votes.filter(function (v) { return v.question === q.id; });
       var voters = qv.length;
@@ -172,12 +186,16 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
       qv.forEach(function (v) { (counts[v.option] = counts[v.option] || []).push(v.voter); });
       var max = 0, leaders = [];
       q.options.forEach(function (o) { var c = (counts[o[0]] || []).length; if (c > max) { max = c; leaders = [o]; } else if (c === max && c > 0) leaders.push(o); });
-      var state = 'Hlasovalo ' + voters + ' ze 7', ok = false;
-      if (voters > 0 && voters < QUORUM) state += ', do usnesení chybí ' + hlasy(QUORUM - voters);
-      else if (voters >= QUORUM && max > 0) {
-        if (leaders.length === 1) { state = (q.orient ? 'Orientačně vede: ' : 'Platí: ') + leaders[0][1].split(' · ')[0]; ok = true; }
-        else state = q.orient ? 'Rovnost, rozhodne se na místě' : 'Rovnost, rozhoduje Jindřich';
+      // Nezávazná usnesení (trasy) jsou jen nálada: bez kvóra a bez vítěze, rozhoduje se na rozcestí
+      var state = (q.mood ? 'Nezávazné · hlasovalo ' : 'Hlasovalo ') + voters + ' ze 7', ok = false;
+      if (!q.mood) {
+        if (voters > 0 && voters < QUORUM) state += ', do usnesení chybí ' + hlasy(QUORUM - voters);
+        else if (voters >= QUORUM && max > 0) {
+          if (leaders.length === 1) { state = 'Platí: ' + leaders[0][1].split(' · ')[0]; ok = true; }
+          else state = 'Rovnost, rozhoduje Jindřich';
+        }
       }
+      if (q.id === 'hymna' && ok) hymn = leaders[0][0];
       var mine = (qv.filter(function (v) { return v.voter === me; })[0] || {}).option;
       var opts = q.options.map(function (o) {
         var who = counts[o[0]] || [];
@@ -196,6 +214,7 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
         el('div', { class: 'hv-opts' }, opts)
       ]));
     });
+    labelTracks(hymn);
     var stamp = lastLoad ? 'Stav z ' + lastLoad.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' }) + ', obnovuje se samo.' : 'Načítám hlasy…';
     root.appendChild(el('p', { class: 'hv-status' + (statusErr ? ' err' : ''), role: 'status', text: statusMsg || stamp }));
   }

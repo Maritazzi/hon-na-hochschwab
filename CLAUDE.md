@@ -7,7 +7,7 @@ Statická stránka (bez buildu a bez frameworku) pro sedm kamarádů z Prahy: t�
 - `index.html`: celý obsah stránky jako šablona. Texty se upravují přímo tady.
 - `js/hon.js`: třída `Component` s metodou `renderVals()`. Vrací hodnoty pro šablonu a obsahuje i texty generované skriptem: Seppovy hlášky u počítadla Krügerlů (`says`), plán lovu (`peakDefs`), výstroj (`gearDefs`), zadání anket do WhatsAppu (`polls`) a telefony pro tlačítka Kopírovat (`cp`).
 - `js/runtime.js`: malý vykreslovač šablony. `{{cesta}}` v textu nebo atributu se nahradí hodnotou z `renderVals()`, `<template data-for="seznam" data-as="x">` zopakuje obsah pro položky a `data-on="funkce"` napojí kliknutí. Na `{{…}}` v `index.html` nesahej, pokud neměníš i `renderVals()`.
-- `js/hlasovna.js`: hlasovna valné hromady (Supabase REST) a spodní přehrávač Spotify. Otázky jsou v `QUESTIONS`, jména v `CREW`, skladby přehrávače v `TRACKS` (Spotify id, název, interpret). Přehrávač jede přes Spotify iFrame API. Konec kusu Spotify hlásí jen pozicí rovnou délce, bez pauzy.
+- `js/hlasovna.js`: hlasovna valné hromady (Supabase REST) a spodní přehrávač Spotify. Otázky jsou v `QUESTIONS`, jména v `CREW`, skladby přehrávače v `TRACKS` (Spotify id, název, interpret, id možnosti v usnesení o hymně). Možnosti hymny se berou z `TRACKS`, takže nová skladba potřebuje i migraci. Přehrávač jede přes Spotify iFrame API. Konec kusu Spotify hlásí jen pozicí rovnou délce, bez pauzy.
 - `config.js`: Supabase URL a publishable key. Oba jsou veřejné. Secret ani service_role klíč sem nikdy nepatří.
 - `supabase/schema.sql`: tabulka `votes` s RLS. Povolená id otázek, možnosti každé otázky (`votes_option_valid`) a jména jsou v check constraintech a musí sedět s `js/hlasovna.js`. Při změně uprav schema.sql a připrav i další `supabase/migrace-NN-*.sql`, kterou uživatel spustí v SQL Editoru.
 - `css/style.css`, `assets/ondra-nacrt.jpg` (Ondrův náčrt trasy 1C).
@@ -36,7 +36,7 @@ gh api -X POST "repos/{owner}/hon-na-hochschwab/pages" -f "source[branch]=main" 
 - Hlas: Sepp v uvozovkách a ve svém úvodu v záhlaví družině vyká („vy“). Všechno ostatní je psané za družinu („my“, „uvidíme“, „jdeme“).
 - Humor je česká satira „na hraně“, ne poučky. Heslo zní „Všechno nejlepší hned!“, německy „Alles Gute sofort!“.
 - Družina má 7 lidí: Mari (Dan, autor oběžníku), Smeky, Lencoš, Gregy, Jindřich, Pavel, Vlasta. Ondra není člen družiny ani nehlasuje. Je zvěd ze spřátelené party, který revír prošel v roce 2024.
-- Popisy lečí obsahují jen základní trasu (1A, 2A a 3. leč) a co je cestou vidět. Varianty (1B, 1C, 2B–2D) a odjezd čtvrtek/pátek patří jen do valné hromady. Trasy jsou orientační, odjezd a termín se hlasují závazně.
+- Popisy lečí obsahují jen základní trasu (1A, 2A a 3. leč) a co je cestou vidět. Varianty (1B, 1C, 2B–2D) a odjezd čtvrtek/pátek patří jen do valné hromady. Trasy jsou orientační: usnesení č. 3 a 4 jsou nezávazná, jen nálada bez kvóra a bez vítěze, rozhoduje se na rozcestí. Ostatní usnesení (odjezd, termín, Krügerl, hymna, východ slunce) platí při čtyřech hlasech.
 - Pes nejede. Mari kameny tahat nechce, je to jen vtip ve skupině.
 
 ## Fakta
