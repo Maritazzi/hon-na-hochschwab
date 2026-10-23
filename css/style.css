@@ -24,17 +24,20 @@ div.sc[style*="clip-path"] > span{white-space:normal!important}
 .hv-who{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
 .hv-who label{font-weight:700}
 .hv-who select{font:inherit;font-size:17px;min-height:44px;padding:4px 10px;border:1px solid #94742E;border-radius:3px;background:#FFFFFF;color:#1D2418}
-.hv-q{display:flex;flex-direction:column;gap:8px;padding-top:10px;border-top:1px dotted #C5B48E}
+.hv-q{display:flex;flex-direction:column;gap:8px;background:#F4ECD8;border:2px solid #94742E;border-radius:3px;padding:12px 14px}
+.hv-q[hidden]{display:none}
 .hv-q-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px}
-.hv-q-head b{font-size:18px}
+.hv-q-label{font-family:'Alegreya Sans SC','Gill Sans','Trebuchet MS',sans-serif;font-size:13px;letter-spacing:.06em;font-weight:700;color:#7E5600}
+.hv-q-login{min-height:44px;padding:4px 12px;border:1px solid #94742E;border-radius:3px;background:#EADFC6;color:#1D2418;font-family:'Alegreya Sans SC','Gill Sans','Trebuchet MS',sans-serif;font-size:14px;font-weight:700;letter-spacing:.06em;cursor:pointer}
 .hv-q-state{font-family:'Alegreya Sans SC','Gill Sans','Trebuchet MS',sans-serif;font-size:13px;letter-spacing:.06em;font-weight:700;color:#5B6250}
 .hv-q-state.ok{color:#33422E}
 .hv-opts{display:flex;flex-direction:column;gap:6px}
-.hv-opt{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;min-height:44px;padding:8px 12px;text-align:left;font:inherit;font-size:16px;color:#1D2418;background:#EADFC6;border:1px solid #C5B48E;border-radius:3px;cursor:pointer;overflow:hidden}
+.hv-opt{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:2px 12px;width:100%;min-height:44px;padding:8px 12px;text-align:left;font:inherit;font-size:16px;color:#1D2418;background:#EADFC6;border:1px solid #C5B48E;border-radius:3px;cursor:pointer;overflow:hidden}
 .hv-opt:disabled{cursor:default}
 .hv-opt .bar{position:absolute;inset:0 auto 0 0;background:rgba(148,116,46,.22);pointer-events:none}
 .hv-opt > span{position:relative}
-.hv-opt .who{font-size:14px;color:#5B6250}
+.hv-opt .cnt{font-weight:700;font-size:15px;color:#5B6250;font-variant-numeric:tabular-nums}
+.hv-opt .who{grid-column:1 / -1;font-size:14px;color:#5B6250}
 .hv-opt.mine{border:2px solid #33422E;background:#DCE3D3}
 .hv-opt.mine .bar{background:rgba(51,66,46,.22)}
 .hv-roll{display:flex;flex-wrap:wrap;align-items:center;gap:6px}

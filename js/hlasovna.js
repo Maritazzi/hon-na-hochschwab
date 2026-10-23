@@ -95,7 +95,7 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
   });
   window.addEventListener('resize', fit);
 
-  // --- Hlasovna ---
+  // --- Hlasovna: prezence nahoře ve valné hromadě (#hlasovna), hlasování u každého usnesení ([data-hv="id"]) ---
   var CREW = ['Mari', 'Smeky', 'Lencoš', 'Gregy', 'Jindřich', 'Pavel', 'Vlasta'];
   var QUORUM = 4;
   var QUESTIONS = [
@@ -105,9 +105,9 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
     { id: 'termin', title: 'Usnesení č. 2: termín 2027 (pá–ne, při čtvrtku o den dřív)', options: [
       ['18-20-6', '18.–20. 6.'], ['25-27-6', '25.–27. 6.'], ['11-13-6', '11.–13. 6.'] ] },
     { id: 'lec1', mood: true, title: 'Usnesení č. 3, nezávazné: 1. leč, kudy na Fölzalm', options: [
-      ['1A', '1A Ondrova trasa · 11,4 km · 5:12 h'],
-      ['1B', '1B Totéž + odbočka na Windgrube a Schönleitenhaus · 14,9 km · 6:10 h'],
-      ['1C', '1C Ondrův oblouk přes Fölzklamm · 16,6 km · 8:30 h · jen při čtvrtku'] ] },
+      ['1A', '1A Ondrova trasa · 11,4 km · ↑ 1 040 m · 5:12 h'],
+      ['1B', '1B Totéž + odbočka na Windgrube a Schönleitenhaus · 14,9 km · ↑ 1 095 m · 6:10 h'],
+      ['1C', '1C Ondrův oblouk přes Fölzklamm · 16,6 km · ↑ ≈ 1 530 m · 8:30 h · jen při čtvrtku'] ] },
     { id: 'lec2', mood: true, title: 'Usnesení č. 4, nezávazné: 2. leč, co s vrcholem', options: [
       ['2A', '2A Klasika: k chatě, vrchol nalehko'],
       ['2B', "2B Klasika + G'hacktkogel · +1:20 h"],
@@ -123,7 +123,7 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
       ['spime', 'Spíme · Sepp to vyfotí'] ] }
   ];
   var root = document.getElementById('hlasovna');
-  if (!root || !SUPABASE_URL || !SUPABASE_KEY) return;   // bez nastavení v config.js se hlasovna neukáže
+  if (!root || !SUPABASE_URL || !SUPABASE_KEY) return;   // bez nastavení v config.js se hlasování neukáže
 
   var base = SUPABASE_URL.replace(/\/+$/, '') + '/rest/v1/votes';
   function headers(extra) {
@@ -136,7 +136,8 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
   var me = '';
   try { me = localStorage.getItem('hon-hochschwab-voter') || ''; } catch (e) {}
   if (CREW.indexOf(me) < 0) me = '';
-  var busy = false, lastLoad = null, statusMsg = '', statusErr = false;
+  // busy: id usnesení, které se právě ukládá; failed: id usnesení, jehož hlas se neuložil
+  var busy = '', failed = '', lastLoad = null, statusMsg = '', statusErr = false;
 
   function el(tag, attrs, kids) {
     var n = document.createElement(tag);
@@ -151,23 +152,29 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
   }
   function setStatus(msg, err) { statusMsg = msg; statusErr = !!err; render(); }
   function hlasy(n) { return n === 1 ? '1 hlas' : n + ' hlasy'; }
+  function goLogin() {
+    setStatus('Nejdřív se vyber, pak hlasuj u usnesení.', true);
+    var s = document.getElementById('hv-voter');
+    if (s) { s.scrollIntoView({ block: 'center', behavior: 'smooth' }); s.focus({ preventScroll: true }); }
+  }
 
-  function render() {
+  // Prezence: kdo hlasuje a prezenční listina (kolik usnesení kdo odhlasoval, ať je koho popohnat ve WhatsAppu)
+  function renderRoll() {
     root.hidden = false;
     root.textContent = '';
-    root.appendChild(el('h3', { text: 'Hlasovna valné hromady' }));
+    root.appendChild(el('h3', { text: 'Prezence' }));
     var sel = el('select', { id: 'hv-voter', onchange: function (e) {
       me = e.target.value;
       try { localStorage.setItem('hon-hochschwab-voter', me); } catch (err) {}
+      statusMsg = ''; statusErr = false;
       render();
     } }, [el('option', { value: '', text: 'vyber se' })].concat(CREW.map(function (n) {
       var o = el('option', { value: n, text: n }); if (n === me) o.selected = true; return o;
     })));
     root.appendChild(el('div', { class: 'hv-who' }, [
       el('label', { for: 'hv-voter', text: 'Kdo hlasuje:' }), sel,
-      el('span', { class: 'hv-status', text: me ? 'Klikni na možnost. Hlas jde kdykoli změnit.' : 'Nejdřív se vyber, pak klikej.' })
+      el('span', { class: 'hv-status', text: me ? 'Hlasuj rovnou u každého usnesení níž. Hlas jde kdykoli změnit.' : 'Vyber se, pak hlasuj u každého usnesení níž.' })
     ]));
-    // Prezenční listina: kolik usnesení kdo odhlasoval, ať je koho popohnat ve WhatsAppu
     var all = QUESTIONS.length, full = 0;
     var chips = CREW.map(function (n) {
       var c = QUESTIONS.filter(function (q) { return votes.some(function (v) { return v.voter === n && v.question === q.id; }); }).length;
@@ -176,8 +183,16 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
     });
     root.appendChild(el('div', { class: 'hv-roll' }, [el('span', { class: 'hv-roll-h', text: 'Prezenční listina' })].concat(chips)));
     if (lastLoad && full === CREW.length) root.appendChild(el('p', { class: 'hv-status', text: 'Odhlasováno do posledního myslivce. Sepp chystá oznámení.' }));
+    var stamp = lastLoad ? 'Stav z ' + lastLoad.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' }) + ', obnovuje se samo.' : 'Načítám hlasy…';
+    root.appendChild(el('p', { class: 'hv-status' + (statusErr ? ' err' : ''), role: 'status', text: statusMsg || stamp }));
+  }
+
+  function render() {
+    renderRoll();
     var hymn = '';
     QUESTIONS.forEach(function (q) {
+      var box = document.querySelector('[data-hv="' + q.id + '"]');
+      if (!box) return;
       var qv = votes.filter(function (v) { return v.question === q.id; });
       var voters = qv.length;
       var counts = {};
@@ -202,19 +217,23 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
           onclick: function () { castVote(q.id, o[0]); } }, [
           el('span', { class: 'bar', style: 'width:' + pct + '%' }),
           el('span', { text: o[1] }),
-          el('span', { class: 'who', text: who.length ? who.length + ' · ' + who.join(', ') : '0' })
+          el('span', { class: 'cnt', text: String(who.length) }),
+          who.length ? el('span', { class: 'who', text: who.join(', ') }) : null
         ]);
-        if (!me || busy) b.disabled = true;
+        if (busy) b.disabled = true;
         return b;
       });
-      root.appendChild(el('div', { class: 'hv-q' }, [
-        el('div', { class: 'hv-q-head' }, [el('b', { text: q.title }), el('span', { class: 'hv-q-state' + (ok ? ' ok' : ''), text: state })]),
-        el('div', { class: 'hv-opts' }, opts)
-      ]));
+      var who = me ? el('span', { class: 'hv-q-label', text: 'Hlasuješ jako ' + me })
+                   : el('button', { type: 'button', class: 'hv-q-login', onclick: goLogin, text: 'Nejdřív se přihlas v prezenci ↑' });
+      box.hidden = false;
+      box.textContent = '';
+      box.setAttribute('role', 'group');
+      box.setAttribute('aria-label', q.title);
+      box.appendChild(el('div', { class: 'hv-q-head' }, [who, el('span', { class: 'hv-q-state' + (ok ? ' ok' : ''), text: busy === q.id ? 'Ukládám hlas…' : state })]));
+      box.appendChild(el('div', { class: 'hv-opts' }, opts));
+      if (failed === q.id) box.appendChild(el('p', { class: 'hv-status err', role: 'status', text: 'Hlas se neuložil. Zkus to znovu za chvíli.' }));
     });
     labelTracks(hymn);
-    var stamp = lastLoad ? 'Stav z ' + lastLoad.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' }) + ', obnovuje se samo.' : 'Načítám hlasy…';
-    root.appendChild(el('p', { class: 'hv-status' + (statusErr ? ' err' : ''), role: 'status', text: statusMsg || stamp }));
   }
 
   function load() {
@@ -224,17 +243,18 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
       .catch(function () { setStatus('Hlasy se nepodařilo načíst. Zkontroluj připojení a obnov stránku.', true); });
   }
   function castVote(question, option) {
-    if (!me || busy) return;
-    busy = true; setStatus('Ukládám hlas…');
+    if (busy) return;
+    if (!me) { goLogin(); return; }
+    busy = question; failed = ''; render();
     fetch(base + '?on_conflict=question,voter', {
       method: 'POST',
       headers: headers({ Prefer: 'resolution=merge-duplicates,return=minimal' }),
       body: JSON.stringify([{ question: question, voter: me, option: option, updated_at: new Date().toISOString() }])
     }).then(function (r) {
       if (!r.ok) throw new Error(r.status);
-      busy = false; statusMsg = ''; return load();
+      busy = ''; return load();
     }).catch(function () {
-      busy = false; setStatus('Hlas se neuložil. Zkus to znovu za chvíli.', true);
+      busy = ''; failed = question; render();
     });
   }
   render();

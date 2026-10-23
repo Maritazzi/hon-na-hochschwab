@@ -426,10 +426,14 @@
 
 <section id="hlasovani" style="filter: {{fx.blur}}; display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; flex-direction: column; gap: 2px; padding-bottom: 8px; border-bottom: 3px double #94742E"><span class="sc" style="font-weight: 500; letter-spacing: .12em; font-size: 14px; color: #5B6250">Hauptversammlung · Freie Jagdgesellschaft Prag</span><h2 class="frak" style="font-weight: 700; font-size: 40px; line-height: 1.05">Valná hromada spolku</h2></div>
-<p style="max-width: 72ch">Svobodný myslivecký spolek rozhoduje demokraticky. Jeden myslivec, jeden hlas, hlasuje se v <a href="#hlasovna">hlasovně</a> pod posledním usnesením. Usnesení platí, když hlasují aspoň čtyři ze sedmi. Usnesení o trasách jsou nezávazná, hlasuje se jen o náladě. Kudy přesně půjdeme, rozhodneme na rozcestí podle počasí a nohou. Dopředu je potřeba vědět jen jedno: 1C jde jen s odjezdem ve čtvrtek. Při rovnosti rozhoduje Jindřich: hlasuje poslední, ale přesně. Lencoš smí za hlas nabídnout tyčinku, Vlasta cigaretu. Obojí je v souladu se stanovami.</p>
+<p style="max-width: 72ch">Svobodný myslivecký spolek rozhoduje demokraticky. Jeden myslivec, jeden hlas, přihlásíme se jménem v <a href="#hlasovna">prezenci</a> hned pod tím a hlasujeme rovnou u každého usnesení. Usnesení platí, když hlasují aspoň čtyři ze sedmi. Usnesení o trasách jsou nezávazná, hlasuje se jen o náladě. Kudy přesně půjdeme, rozhodneme na rozcestí podle počasí a nohou. Dopředu je potřeba vědět jen jedno: 1C jde jen s odjezdem ve čtvrtek. Při rovnosti rozhoduje Jindřich: hlasuje poslední, ale přesně. Lencoš smí za hlas nabídnout tyčinku, Vlasta cigaretu. Obojí je v souladu se stanovami.</p>
 <p style="max-width: 72ch; font-style: italic"><span class="frak" style="font-style: normal; font-size: 24px; color: #94742E">Sepp:</span> „Svobodný spolek z Prahy hlasuje o tom, kdy pojede pít do Rakouska. Za Franze Josefa by z toho byl proces pro velezradu, dneska jen kocovina. Výsledek pak oznámí Sepp.“</p>
+<div id="hlasovna" hidden></div>
 <h3 style="font-size: 22px; font-weight: 700">Usnesení č. 1: odjezd z Prahy</h3>
 <p style="max-width: 72ch">Praha → Seewiesen 392 km, asi 4 h 50 min podle Mapy.cz. Rakouskou dálniční známku kupujeme předem online, ať první zastávka není u pokladny. <a href="https://mapy.com/cs/zakladni?planovani-trasy&amp;rc=9hAL1xXx-09iWOXxLvC7&amp;rs=&amp;rs=&amp;ri=14.4208%2C50.088&amp;ri=15.2670853%2C47.6204007&amp;mrp=%7B%22c%22%3A111%7D">Trasa autem v Mapy.cz ↗</a></p>
+<div class="hv-q" data-hv="odjezd" hidden></div>
+<details class="var">
+<summary class="sc">Čtvrtek a pátek podrobně</summary>
 <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch">
 <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 8px; background: #F4ECD8; border: 1px solid #C5B48E; border-radius: 3px; padding: 14px 16px">
 <div style="display: flex; align-items: baseline; gap: 10px"><span class="sc" style="flex: none; font-weight: 700; font-size: 19px; letter-spacing: .04em; padding: 2px 10px; border-radius: 2px; background: {{loden}}; color: #EEE9D9">ČT</span><h4 style="margin: 0; font-size: 21px; font-weight: 700; line-height: 1.15">Čtvrtek: Anschuss v Seewiesenu</h4></div>
@@ -448,9 +452,12 @@
 <p style="font-style: italic; color: #5B6250"><span class="frak" style="font-style: normal; color: #94742E; font-size: 20px">Sepp:</span> „Pražan, který vstane ve čtyři, aby šel do kopce střízlivý. Takového Sepp za čtyřicet let neviděl. A vidět nechce.“</p>
 </div>
 </div>
+</details>
 <h3 style="font-size: 22px; font-weight: 700">Usnesení č. 2: termín</h3>
 <p style="max-width: 72ch">Podklady v <a href="#pocasi">Seppově Wetterberichtu</a>. Doporučené víkendy jsou 18.–20. 6. a 25.–27. 6., při čtvrtečním odjezdu vždy o den dřív.</p>
+<div class="hv-q" data-hv="termin" hidden></div>
 <h3 style="font-size: 22px; font-weight: 700">Usnesení č. 3, nezávazné: 1. leč, kudy na Fölzalm</h3>
+<div class="hv-q" data-hv="lec1" hidden></div>
 <details class="var">
 <summary class="sc">Varianty 1A, 1B a 1C</summary>
 <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch">
@@ -489,6 +496,7 @@
 </div>
 </details>
 <h3 style="font-size: 22px; font-weight: 700">Usnesení č. 4, nezávazné: 2. leč, co s vrcholem</h3>
+<div class="hv-q" data-hv="lec2" hidden></div>
 <details class="var">
 <summary class="sc">Varianty 2A až 2D</summary>
 <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch">
@@ -536,12 +544,14 @@
 <p style="max-width: 72ch"><b>Mimo hlasování, když prší:</b> z Grasserhütte přes Voisthalerhütte rovnou na Schiestlhaus, 7 km, ↑ 740 m, 3:15 h. Bez hřebene, zato s chatou v půlce. O tom rozhodne počasí, ne valná hromada. <a href="https://mapy.com/cs/turisticka?planovani-trasy&amp;l=1&amp;rc=9iJxwxLoiH9iIeuxLtE79i2WbxLuyp&amp;rs=&amp;rs=&amp;rs=&amp;ri=15.188334%2C47.600118&amp;ri=15.18095%2C47.61229&amp;ri=15.147016%2C47.6201446&amp;mrp=%7B%22c%22%3A132%7D">Zkratka v Mapy.cz ↗</a></p>
 <h3 style="font-size: 22px; font-weight: 700">Usnesení č. 5: první Krügerl</h3>
 <p style="max-width: 72ch">Podklady ve <a href="#vycep">výčepním lístku</a>. Hostinský výsledek ignoruje a natočí, co má.</p>
+<div class="hv-q" data-hv="pivo" hidden></div>
 <h3 style="font-size: 22px; font-weight: 700">Usnesení č. 6: hymna honu</h3>
 <p style="max-width: 72ch">Podklady v <a href="#rosamunde-open">přehrávači nahoře</a>, sedm kusů. Vítězka dostane v seznamu skladeb korunku. Kapellmeister Smeky výsledek ignoruje a stejně začne Rosamunde.</p>
+<div class="hv-q" data-hv="hymna" hidden></div>
 <h3 style="font-size: 22px; font-weight: 700">Usnesení č. 7: na východ slunce na vrchol</h3>
 <p style="max-width: 72ch">Ráno po 2. leči: ze Schiestlhausu vyrazit ve 4:20, na vrchol je to 20–30 minut a slunce vychází ve 4:51. Čelovka a teplá vrstva jsou ve výstroji. Když bude mlha, ruší usnesení počasí, ne valná hromada.</p>
 <p style="max-width: 72ch; font-style: italic"><span class="frak" style="font-style: normal; font-size: 24px; color: #94742E">Sepp:</span> „Pražan ve čtyři ráno na vrcholu, a střízlivý. Sepp tomu uvěří, až uvidí fotku.“</p>
-<div id="hlasovna" hidden></div>
+<div class="hv-q" data-hv="vychod" hidden></div>
 </section>
 
 <section id="zver" style="filter: {{fx.blur}}; display: flex; flex-direction: column; gap: 16px">
@@ -640,7 +650,7 @@
 <li>Hříbkové rizoto s kuřetem, Pappardelle s houbami</li>
 <li>Spaghetti frutti di mare, Bruschetta s liškami</li>
 </ul>
-<p style="font-size: 15px; color: #5B6250">Podle lístku na webu, hlavní jídla 14,70–19,50 €. Habsburkové ztratili Benátky v roce 1866, Roger je vrací na talíř.</p>
+<p style="font-size: 15px; color: #5B6250">Podle lístku na webu, hlavní jídla 14,70–19,50 €. Habsburkové ztratili Benátky v roce 1866 a po roce 1918 i moře. Roger vrací obojí na talíř: frutti di mare v 933 m nad mořem, které Rakousko nemá.</p>
 </div>
 </div>
 </div>
@@ -656,7 +666,6 @@
 <div style="display: flex; flex-wrap: wrap; gap: 2px"><template data-for="mugs" data-as="m"><svg viewBox="0 0 48 48" aria-hidden="true" style="width: 24px; height: 24px; flex: none"><path d="M10,14 H32 V40 Q32,43 29,43 H13 Q10,43 10,40 Z" fill="#CDA95C"></path><path d="M32,19 H37 Q41,19 41,23 V31 Q41,35 37,35 H32" fill="none" stroke="#CDA95C" stroke-width="3"></path><path d="M8,14 Q8,8 14,9 Q17,5 22,8 Q27,5 30,9 Q35,8 34,14 Z" fill="#FFFFFF"></path></svg></template></div>
 <button type="button" data-on="krReset" class="sc" style="margin-left: auto; min-height: 44px; padding: 4px 14px; border-radius: 3px; border: 1px solid #94742E; background: transparent; color: #EEE9D9; font-weight: 700; font-size: 14px; letter-spacing: .06em; cursor: pointer">Ausnüchtern · vystřízlivět</button>
 </div>
-<p style="flex: 1 1 100%; font-size: 14px; color: #B9BDA4">Od třetího Krügerlu se oběžník začne rozmazávat a zdvojovat, od šestého se kýve. Ostrý zůstane jen tenhle pult.</p>
 </div>
 </section>
 
