@@ -61,6 +61,44 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
   // busy: id usnesení, které se právě ukládá; failed: id usnesení, jehož hlas se neuložil
   var busy = '', failed = '', lastLoad = null, statusMsg = '', statusErr = false;
 
+  // --- Společné odškrtávání (výřad družiny v Plánu lovu, společná výstroj): tabulka checks ---
+  // Stav jde do šablony přes window.__dcComp.setState({ shared, me }) a js/hon.js volá window.honShared.toggle(id).
+  var checksUrl = SUPABASE_URL.replace(/\/+$/, '') + '/rest/v1/checks';
+  var checks = null, checkBusy = false;
+  function publishShared(err) {
+    if (window.__dcComp) window.__dcComp.setState({ shared: checks, me: me, shareErr: !!err });
+  }
+  function loadChecks() {
+    return fetch(checksUrl + '?select=item,done,who', { headers: headers() })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (rows) {
+        if (checkBusy) return;
+        var m = {};
+        rows.forEach(function (x) { m[x.item] = { done: x.done, who: x.who }; });
+        checks = m; publishShared();
+      })
+      .catch(function () {});   // bez tabulky checks zůstává odškrtávání jen v telefonu
+  }
+  window.honShared = { toggle: function (item) {
+    if (!checks || checkBusy) return;
+    if (!me) { goLogin(); return; }
+    var prev = checks[item], now = !(prev && prev.done);
+    checks = Object.assign({}, checks); checks[item] = { done: now, who: me };
+    checkBusy = true; publishShared();
+    fetch(checksUrl + '?on_conflict=item', {
+      method: 'POST',
+      headers: headers({ Prefer: 'resolution=merge-duplicates,return=minimal' }),
+      body: JSON.stringify([{ item: item, done: now, who: me, updated_at: new Date().toISOString() }])
+    }).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      checkBusy = false; return loadChecks();
+    }).catch(function () {
+      checks = Object.assign({}, checks);
+      if (prev) checks[item] = prev; else delete checks[item];
+      checkBusy = false; publishShared(true);
+    });
+  } };
+
   function el(tag, attrs, kids) {
     var n = document.createElement(tag);
     if (attrs) for (var k in attrs) {
@@ -75,7 +113,7 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
   function setStatus(msg, err) { statusMsg = msg; statusErr = !!err; render(); }
   function hlasy(n) { return n === 1 ? '1 hlas' : n + ' hlasy'; }
   function goLogin() {
-    setStatus('Nejdřív se vyber, pak hlasuj u usnesení.', true);
+    setStatus('Nejdřív se vyber, pak můžeš hlasovat i odškrtávat.', true);
     var s = document.getElementById('hv-voter');
     if (s) { s.scrollIntoView({ block: 'center', behavior: 'smooth' }); s.focus({ preventScroll: true }); }
   }
@@ -90,6 +128,7 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
       try { localStorage.setItem('hon-hochschwab-voter', me); } catch (err) {}
       statusMsg = ''; statusErr = false;
       render();
+      publishShared();
     } }, [el('option', { value: '', text: 'vyber se' })].concat(CREW.map(function (n) {
       var o = el('option', { value: n, text: n }); if (n === me) o.selected = true; return o;
     })));
@@ -178,6 +217,7 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
   }
   render();
   load();
-  setInterval(function () { if (!document.hidden && !busy) load(); }, 20000);
-  document.addEventListener('visibilitychange', function () { if (!document.hidden && !busy) load(); });
+  loadChecks();
+  setInterval(function () { if (!document.hidden && !busy) { load(); loadChecks(); } }, 20000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && !busy) { load(); loadChecks(); } });
 })();

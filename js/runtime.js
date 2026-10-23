@@ -119,6 +119,7 @@
     };
     window.DCLogic.prototype.forceUpdate = function () { if (!queued) { queued = true; Promise.resolve().then(render); } };
     comp = new (Component())({});
+    window.__dcComp = comp;   // js/hlasovna.js sem posílá společné odškrtávání ze Supabase (setState)
     try {
       var saved = JSON.parse(localStorage.getItem(storeKey) || 'null');
       if (saved) persistKeys.forEach(function (k) { if (saved[k] && typeof saved[k] === 'object') comp.state[k] = saved[k]; });

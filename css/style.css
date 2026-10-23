@@ -77,3 +77,8 @@ details.var[open] > summary{margin-bottom:10px}
 .vl-grid > :first-child{grid-column:1 / -1}
 .vl-grid > :first-child p{columns:2 22em;column-gap:28px}
 @media (max-width:600px){.vl-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Odškrtávání (plán lovu, výstroj): tlačítka s rolí checkbox, protože šablona neumí vlastnost checked */
+.chk{font:inherit;text-align:left;cursor:pointer;-webkit-appearance:none;appearance:none}
+.cbx{flex:none;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;box-sizing:border-box;border:2px solid #33422E;border-radius:3px;background:#FFFFFF;color:#FFFFFF;font-size:14px;font-weight:700;line-height:1}
+.chk[aria-checked="true"] .cbx{background:#94742E;border-color:#94742E}

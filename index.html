@@ -14,7 +14,7 @@
 <meta property="og:image:height" content="746">
 <meta name="theme-color" content="#33422E">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@500;700&amp;family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&amp;family=Alegreya+Sans+SC:wght@500;700&amp;display=swap">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=20261023c">
 </head>
 <body>
 <div id="app" data-pending="">
@@ -360,6 +360,8 @@
 <path d="M109,266L116,252L119,244L117,241L123,243L133,252L151,246L160,250L169,238L175,236L188,245L204,229L213,215L221,216L237,208L237,201L233,194L266,202L277,211L294,218L321,219L338,212L351,192L370,177L382,180L393,190L409,192L424,202L451,195L468,196L471,191L475,191L489,178L501,177L520,179L541,169L551,179L558,179L570,177L583,166L597,176L604,187L612,188L626,177L652,174L674,163L684,162L730,133L756,125L773,111L794,104L823,98L859,102L879,95L899,82L917,77L927,79L962,71L989,72L1003,67L1008,68L1009,78L1019,82L1015,86L1023,100L1018,104L1020,110L1014,114L1024,132L1029,137L1028,139L1037,142L1059,142L1077,136L1092,146L1100,156L1098,172L1101,179L1110,187L1117,199L1120,199L1124,210L1121,210L1122,217L1115,228L1112,240L1107,243L1104,241L1093,245L1075,240L1066,243L1060,237L1054,237L1045,244L1038,246L1041,269L1016,270L1006,261" fill="none" stroke="{{d3}}" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
 <path d="M71,279L80.5,295.5L61.5,295.5Z" fill="#1D2418"></path>
+<path d="M294,474.3L300.7,485.9L287.3,485.9Z" fill="#1D2418"></path>
+<path d="M186,401.3L192.7,412.9L179.3,412.9Z" fill="#1D2418"></path>
 <path d="M355,527L361.7,538.6L348.3,538.6Z" fill="#1D2418"></path>
 <path d="M372,188L378.7,199.6L365.3,199.6Z" fill="#1D2418"></path>
 <path d="M592,165L598.7,176.6L585.3,176.6Z" fill="#1D2418"></path>
@@ -374,6 +376,8 @@
 <text x="92" y="266" text-anchor="end" font-size="15">Schiestlhaus<tspan x="92" dy="1.15em" font-size="13" font-weight="500" fill="#5B6250">2 156 m</tspan></text>
 <text x="149" y="351" text-anchor="start" font-size="15">Rozcestí 1 922 m<tspan x="149" dy="1.15em" font-size="13" font-weight="500" fill="#5B6250">tečkovaně 2D žebříky</tspan></text>
 <text x="355" y="558" text-anchor="middle" font-size="15">Fölzstein 1 946 m</text>
+<text x="282" y="503" text-anchor="end" font-size="15">Fölzkogel 2 022</text>
+<text x="174" y="430" text-anchor="end" font-size="15">Karlhochkogel 2 096</text>
 <text x="435" y="496" text-anchor="start" font-size="15">Grasserhütte<tspan x="435" dy="1.15em" font-size="13" font-weight="500" fill="#5B6250">Fölzalm 1 484 m</tspan></text>
 <text x="372" y="221" text-anchor="middle" font-size="15">Hutkogel 2 035</text>
 <text x="592" y="198" text-anchor="middle" font-size="15">Severinkogel 2 038</text>
@@ -395,14 +399,15 @@
 <div style="display: flex; flex-direction: column; gap: 2px; padding-bottom: 8px; border-bottom: 3px double #94742E"><span class="sc" style="font-weight: 500; letter-spacing: .12em; font-size: 14px; color: #5B6250">Abschussplan · odstřel vrcholů</span><h2 class="frak" style="font-weight: 700; font-size: 40px; line-height: 1.05">Plán lovu</h2></div>
 <div style="display: flex; flex-wrap: wrap; gap: 8px">
 <template data-for="peaks" data-as="pk">
-<label style="flex: 1 1 260px; display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 10px 12px; background: {{pk.bg}}; color: {{pk.fg}}; border: 1px solid {{pk.bd}}; border-radius: 3px; cursor: pointer">
-<input type="checkbox" checked="{{pk.on}}" onChange="{{pk.toggle}}" style="width: 20px; height: 20px; margin: 0; flex: none; accent-color: #33422E">
+<button type="button" role="checkbox" aria-checked="{{pk.on}}" data-on="pk.toggle" class="chk" style="flex: 1 1 260px; display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 10px 12px; background: {{pk.bg}}; color: {{pk.fg}}; border: 1px solid {{pk.bd}}; border-radius: 3px">
+<span class="cbx" aria-hidden="true">{{pk.mark}}</span>
 <span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column"><b>{{pk.name}}</b><span style="font-size: 14px; color: {{pk.subc}}">{{pk.sub}}</span></span>
 <span class="sc" style="font-weight: 700; white-space: nowrap">{{pk.el}}</span>
-</label>
+</button>
 </template>
 </div>
 <p class="sc" style="font-weight: 700; letter-spacing: .06em; color: #5B6250">{{tally}}</p>
+<p style="font-size: 15px; color: #5B6250">Výřad je společný: kdo na vrcholu stojí, odškrtne ho za celou družinu. {{hint}} <a href="#hlasovna">Prezence ↓</a></p>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 22px 40px; margin-top: 8px">
 <p style="flex: 1 1 320px; min-width: 0; max-width: 60ch; font-style: italic"><span class="frak" style="font-style: normal; font-size: 24px; color: #94742E">Sepp:</span> „Osmý kus se v plánu lovu nevede: úsměv hostinské. Ten se nedá ulovit, jen vysloužit. Pražany tu mají rádi a oni je taky, takže to končí oboustranně: vy chválíte její Schweinsbraten, ona vaši němčinu. Obě strany přitom trochu přehánějí.“</p>
 <figure style="flex: 0 1 280px; position: relative; margin: 10px 8px 6px; padding: 10px 10px 8px; background: #F7F0DE; box-shadow: 0 6px 16px rgba(40,25,10,.35); transform: rotate(2deg)">
@@ -718,7 +723,7 @@
 <td style="vertical-align: top; padding: 10px 12px; border-bottom: 1px solid #C5B48E"><b style="font-size: 18px">Voisthalerhütte</b> (ÖAV)<br>1&nbsp;654 m<br><span class="sc" style="display: inline-block; margin-top: 6px; font-weight: 700; font-size: 12px; letter-spacing: .06em; padding: 2px 8px; border-radius: 2px; background: #EADFC6; border: 1px solid #C5B48E">Záloha na 1. noc</span></td>
 <td style="vertical-align: top; padding: 10px 12px; border-bottom: 1px solid #C5B48E">květen – říjen</td>
 <td style="vertical-align: top; padding: 10px 12px; border-bottom: 1px solid #C5B48E"><b style="white-space: nowrap">+43 3861 24184</b><button type="button" class="sc" data-on="cp.vTel.run" style="margin-left: 8px; min-height: 32px; padding: 2px 10px; border-radius: 2px; border: 1px solid #C5B48E; background: {{cp.vTel.bg}}; color: {{cp.vTel.fg}}; font-weight: 700; font-size: 13px; letter-spacing: .05em; cursor: pointer">{{cp.vTel.label}}</button><br>info@voisthalerhuette.at</td>
-<td style="vertical-align: top; padding: 10px 12px; border-bottom: 1px solid #C5B48E">48 míst v lageru. Od Fölzalmu asi hodinu, na Schiestlhaus odtud asi 2 h po Graf-Meran-Steigu.</td>
+<td style="vertical-align: top; padding: 10px 12px; border-bottom: 1px solid #C5B48E">48 míst v lageru. Od Fölzalmu asi hodinu, na Schiestlhaus odtud asi 2 h po Graf-Meran-Steigu. Členové Alpenvereinu tu obvykle spí za polovic.</td>
 </tr>
 <tr>
 <td style="vertical-align: top; padding: 10px 12px"><b style="font-size: 18px">Parkoviště Seewiesen</b><br>~930 m<br><span class="sc" style="display: inline-block; margin-top: 6px; font-weight: 700; font-size: 12px; letter-spacing: .06em; padding: 2px 8px; border-radius: 2px; background: {{loden}}; color: #EEE9D9">✓ Zdarma</span></td>
@@ -733,12 +738,24 @@
 
 <section id="vystroj" style="filter: {{fx.blur}}; display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; flex-direction: column; gap: 2px; padding-bottom: 8px; border-bottom: 3px double #94742E"><span class="sc" style="font-weight: 500; letter-spacing: .12em; font-size: 14px; color: #5B6250">Rucksack · schváleno Gregym</span><h2 class="frak" style="font-weight: 700; font-size: 40px; line-height: 1.05">Výstroj</h2></div>
+<h3 class="sc" style="font-size: 17px; font-weight: 700; letter-spacing: .08em; color: #7E5600">Společně za družinu</h3>
+<p style="font-size: 15px; color: #5B6250; margin-top: -8px">{{hint}} <a href="#hlasovna">Prezence ↑</a></p>
+<div style="display: flex; flex-wrap: wrap; gap: 0 18px">
+<template data-for="gearShared" data-as="g">
+<button type="button" role="checkbox" aria-checked="{{g.on}}" data-on="g.toggle" class="chk" style="flex: 1 1 260px; display: flex; align-items: flex-start; gap: 10px; min-height: 44px; padding: 8px 0; border: 0; border-bottom: 1px dotted #C5B48E; background: none; color: inherit">
+<span class="cbx" aria-hidden="true" style="margin-top: 2px">{{g.mark}}</span>
+<span style="color: {{g.col}}; text-decoration: {{g.deco}}; text-decoration-color: #94742E">{{g.name}} <span style="font-size: 15px; color: #5B6250">{{g.sub}}</span></span>
+</button>
+</template>
+</div>
+<h3 class="sc" style="font-size: 17px; font-weight: 700; letter-spacing: .08em; color: #7E5600">Každý sám</h3>
+<p style="font-size: 15px; color: #5B6250; margin-top: -8px">Odškrtnutí se pamatuje jen v tvém telefonu.</p>
 <div style="display: flex; flex-wrap: wrap; gap: 0 18px">
 <template data-for="gear" data-as="g">
-<label style="flex: 1 1 260px; display: flex; align-items: flex-start; gap: 10px; min-height: 44px; padding: 8px 0; border-bottom: 1px dotted #C5B48E; cursor: pointer">
-<input type="checkbox" checked="{{g.on}}" onChange="{{g.toggle}}" style="width: 20px; height: 20px; margin: 2px 0 0; flex: none; accent-color: #33422E">
+<button type="button" role="checkbox" aria-checked="{{g.on}}" data-on="g.toggle" class="chk" style="flex: 1 1 260px; display: flex; align-items: flex-start; gap: 10px; min-height: 44px; padding: 8px 0; border: 0; border-bottom: 1px dotted #C5B48E; background: none; color: inherit">
+<span class="cbx" aria-hidden="true" style="margin-top: 2px">{{g.mark}}</span>
 <span style="color: {{g.col}}; text-decoration: {{g.deco}}; text-decoration-color: #94742E">{{g.name}} <span style="font-size: 15px; color: #5B6250">{{g.sub}}</span></span>
-</label>
+</button>
 </template>
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
@@ -746,6 +763,7 @@
 <button type="button" class="sc" data-on="gearReset" style="min-height: 44px; padding: 5px 14px; border-radius: 3px; border: 1px solid #C5B48E; background: #F4ECD8; color: #1D2418; font-weight: 700; font-size: 14px; letter-spacing: .06em; cursor: pointer">Od začátku</button>
 <span class="sc" style="font-weight: 700; letter-spacing: .06em; color: #5B6250">{{gearCount}}</span>
 </div>
+<p style="max-width: 72ch; font-size: 15px"><b>Pojištění a levnější nocleh:</b> členství v Alpenvereinu, Rakouském alpském spolku. Podle české stránky jeho sekce Freistadt kryje pojištění pro členy záchranu a pátrání včetně vrtulníku do 22&nbsp;000 € a ošetření v zahraničí. Na chatách alpských spolků platí členové za nocleh obvykle polovic, z našich chat na Voisthalerhütte (ÖAV), u ostatních to ověříme při rezervaci. Členství platí na kalendářní rok a kdo se přihlásí od září, má zaplacený i ten další. <a href="https://www.alpenverein.at/freistadt/kontakt_services/cz/" target="_blank" rel="noopener">Alpenverein česky ↗</a></p>
 </section>
 
 <section id="hlaseni" style="filter: {{fx.blur}}; display: flex; flex-direction: column; gap: 16px">
@@ -765,7 +783,7 @@
 <footer style="filter: {{fx.blur}}; display: flex; flex-direction: column; gap: 10px; align-items: flex-start">
 <p class="frak" style="font-size: 34px; color: #94742E; line-height: 1.1">Waidmannsheil! Euer Sepp<span class="sc" style="display: block; font-size: 15px; letter-spacing: .1em; color: #5B6250">Všechno nejlepší hned · Alles Gute sofort · konec oběžníku</span></p>
 <p style="font-size: 15px; color: #5B6250; max-width: 78ch">Časy a převýšení: Mapy.cz, přepočteno 17. 10. 2026 (Mapy.cz dnes počítají kratší časy než v Ondrových odkazech z roku 2024). Převýšení 2. a 3. leče je spočítané z výškového profilu tras, odchylka do ±5 %. Počasí: ERA5 přes Open-Meteo, 2015–2025.</p>
-<p style="font-size: 15px; color: #5B6250; max-width: 78ch">Zdroje: <a href="https://grasserhuette.jimdofree.com/kontakt/" style="color: #5B6250">Grasserhütte (web chaty)</a>, <a href="https://www.aflenz.gv.at/tourismus-freizeit/gastbetriebe/grasserhuette/" style="color: #5B6250">Grasserhütte (obec Aflenz)</a>, <a href="https://www.steiermark.com/de/Hochsteiermark/Urlaub-planen/Ausflugsziele/Grasserhuette-auf-der-Foelzalm_isd_281116" style="color: #5B6250">Grasserhütte (steiermark.com)</a>, <a href="https://www.steiermark.com/en/Hochsteiermark/Plan-your-holiday/Excursion-destinations/Schiestlhaus-OTK_isd_286283" style="color: #5B6250">Schiestlhaus (steiermark.com)</a>, <a href="https://www.bergwelten.com/h/schiestlhaus" style="color: #5B6250">Schiestlhaus (Bergwelten)</a>, <a href="https://www.bergwelten.com/h/voisthaler-huette" style="color: #5B6250">Voisthalerhütte (Bergwelten)</a>, <a href="https://austria-forum.org/af/AEIOU/Brandhof" style="color: #5B6250">Brandhof (Austria-Forum)</a>, <a href="https://open-meteo.com/" style="color: #5B6250">Open-Meteo</a>, <a href="https://www.bergwelten.com/a/hochschwab-ueber-wasser-gehen" style="color: #5B6250">Hochschwab a voda (Bergwelten)</a>, <a href="https://www.steiermark.com/de/Magazin/Hoch-hinaus-10-Berge-mit-Weitblick_mad_67832177" style="color: #5B6250">10 Berge mit Weitblick (steiermark.com)</a>, <a href="https://www.schusters-alpenpanorama.at/" style="color: #5B6250">Schusters Alpenpanorama</a>, <a href="https://www.schusters-alpenpanorama.at/bergsteigerzimmer" style="color: #5B6250">Bergsteigerzimmer (Schusters Alpenpanorama)</a>, <a href="https://www.steiermark.com/de/Hochsteiermark/Urlaub-planen/Ausflugsziele/Restaurant-Schusters-Alpenpanorama_isd_284284" style="color: #5B6250">Schuster, otevírací doba (steiermark.com)</a>, <a href="https://www.steiermark.com/de/Erzberg-Leoben/Magazin/Gesegnet-mit-weichem-Wasser_mad_57618914" style="color: #5B6250">Gösser (steiermark.com)</a>, <a href="https://www.murauerbier.at/" style="color: #5B6250">Murauer</a>, <a href="https://en.wikipedia.org/wiki/Beer_in_Austria" style="color: #5B6250">Beer in Austria (Wikipedia)</a>, <a href="https://www.bergwelten.com/t/w/10747" style="color: #5B6250">Bürgeralm – Fölzalm (Bergwelten)</a>, <a href="https://open.spotify.com/track/6FT3Zcgo1RkVmBcqyLsdyb" style="color: #5B6250">Rosamunde, Peter Alexander (Spotify)</a>, <a href="https://www.zumroger.at/kontakt" style="color: #5B6250">Zum Roger</a>, <a href="https://www.austria.info/de-at/highlights/schnaps-whisky-gin/" style="color: #5B6250">Edelbrände (austria.info)</a>, <a href="https://www.bmluk.gv.at/themen/lebensmittel/trad-lebensmittel/getraenke/vogelbeerschnaps.html" style="color: #5B6250">Vogelbeerschnaps (BMLUK)</a>, <a href="https://www.ceso.cz/slovo/sajrajt" style="color: #5B6250">Původ slova sajrajt (ceso.cz)</a>, <a href="https://de.wikipedia.org/wiki/Anna_Plochl" style="color: #5B6250">Anna Plochl (Wikipedie)</a>, <a href="https://www.landesarchiv.steiermark.at/cms/dokumente/11683551/1e45b601/399%20bis%20414%20aus%20Mitteilungen%2050-51-Genealogische%20Notizen%20zur%20Familie%20Plochl.pdf" style="color: #5B6250">Svatba na Brandhofu (Steiermärkisches Landesarchiv)</a>, <a href="https://austria-forum.org/af/AEIOU/Brandhof" style="color: #5B6250">Brandhof (Austria-Forum)</a>, <a href="https://basilika-mariazell.at/site/de/wallfahrtpilgern/spiritualitaet/article/384.html" style="color: #5B6250">Poutníci v Mariazellu (Basilika Mariazell)</a>, <a href="https://austria-forum.org/af/Heimatlexikon/Mariazell" style="color: #5B6250">Mariazell (Austria-Forum)</a>, <a href="https://www.vatican.va/content/john-paul-ii/it/angelus/1989/documents/hf_jp-ii_ang_19890115.html" style="color: #5B6250">Mater gentium Slavorum (Vatikán)</a>, <a href="https://austria-forum.org/af/AustriaWiki/Steireranzug" style="color: #5B6250">Steireranzug (Austria-Forum)</a>, <a href="https://www.zumroger.at/speisen-getraenke" style="color: #5B6250">Jídelní lístek Zum Roger</a>, <a href="https://de.wikipedia.org/wiki/Schnapsen" style="color: #5B6250">Schnapsen (Wikipedie)</a>. Trasy: © Seznam.cz a přispěvatelé OpenStreetMap.</p>
+<p style="font-size: 15px; color: #5B6250; max-width: 78ch">Zdroje: <a href="https://grasserhuette.jimdofree.com/kontakt/" style="color: #5B6250">Grasserhütte (web chaty)</a>, <a href="https://www.aflenz.gv.at/tourismus-freizeit/gastbetriebe/grasserhuette/" style="color: #5B6250">Grasserhütte (obec Aflenz)</a>, <a href="https://www.steiermark.com/de/Hochsteiermark/Urlaub-planen/Ausflugsziele/Grasserhuette-auf-der-Foelzalm_isd_281116" style="color: #5B6250">Grasserhütte (steiermark.com)</a>, <a href="https://www.steiermark.com/en/Hochsteiermark/Plan-your-holiday/Excursion-destinations/Schiestlhaus-OTK_isd_286283" style="color: #5B6250">Schiestlhaus (steiermark.com)</a>, <a href="https://www.bergwelten.com/h/schiestlhaus" style="color: #5B6250">Schiestlhaus (Bergwelten)</a>, <a href="https://www.bergwelten.com/h/voisthaler-huette" style="color: #5B6250">Voisthalerhütte (Bergwelten)</a>, <a href="https://austria-forum.org/af/AEIOU/Brandhof" style="color: #5B6250">Brandhof (Austria-Forum)</a>, <a href="https://open-meteo.com/" style="color: #5B6250">Open-Meteo</a>, <a href="https://www.bergwelten.com/a/hochschwab-ueber-wasser-gehen" style="color: #5B6250">Hochschwab a voda (Bergwelten)</a>, <a href="https://www.steiermark.com/de/Magazin/Hoch-hinaus-10-Berge-mit-Weitblick_mad_67832177" style="color: #5B6250">10 Berge mit Weitblick (steiermark.com)</a>, <a href="https://www.schusters-alpenpanorama.at/" style="color: #5B6250">Schusters Alpenpanorama</a>, <a href="https://www.schusters-alpenpanorama.at/bergsteigerzimmer" style="color: #5B6250">Bergsteigerzimmer (Schusters Alpenpanorama)</a>, <a href="https://www.steiermark.com/de/Hochsteiermark/Urlaub-planen/Ausflugsziele/Restaurant-Schusters-Alpenpanorama_isd_284284" style="color: #5B6250">Schuster, otevírací doba (steiermark.com)</a>, <a href="https://www.steiermark.com/de/Erzberg-Leoben/Magazin/Gesegnet-mit-weichem-Wasser_mad_57618914" style="color: #5B6250">Gösser (steiermark.com)</a>, <a href="https://www.murauerbier.at/" style="color: #5B6250">Murauer</a>, <a href="https://en.wikipedia.org/wiki/Beer_in_Austria" style="color: #5B6250">Beer in Austria (Wikipedia)</a>, <a href="https://www.bergwelten.com/t/w/10747" style="color: #5B6250">Bürgeralm – Fölzalm (Bergwelten)</a>, <a href="https://open.spotify.com/track/6FT3Zcgo1RkVmBcqyLsdyb" style="color: #5B6250">Rosamunde, Peter Alexander (Spotify)</a>, <a href="https://www.zumroger.at/kontakt" style="color: #5B6250">Zum Roger</a>, <a href="https://www.austria.info/de-at/highlights/schnaps-whisky-gin/" style="color: #5B6250">Edelbrände (austria.info)</a>, <a href="https://www.bmluk.gv.at/themen/lebensmittel/trad-lebensmittel/getraenke/vogelbeerschnaps.html" style="color: #5B6250">Vogelbeerschnaps (BMLUK)</a>, <a href="https://www.ceso.cz/slovo/sajrajt" style="color: #5B6250">Původ slova sajrajt (ceso.cz)</a>, <a href="https://de.wikipedia.org/wiki/Anna_Plochl" style="color: #5B6250">Anna Plochl (Wikipedie)</a>, <a href="https://www.landesarchiv.steiermark.at/cms/dokumente/11683551/1e45b601/399%20bis%20414%20aus%20Mitteilungen%2050-51-Genealogische%20Notizen%20zur%20Familie%20Plochl.pdf" style="color: #5B6250">Svatba na Brandhofu (Steiermärkisches Landesarchiv)</a>, <a href="https://austria-forum.org/af/AEIOU/Brandhof" style="color: #5B6250">Brandhof (Austria-Forum)</a>, <a href="https://basilika-mariazell.at/site/de/wallfahrtpilgern/spiritualitaet/article/384.html" style="color: #5B6250">Poutníci v Mariazellu (Basilika Mariazell)</a>, <a href="https://austria-forum.org/af/Heimatlexikon/Mariazell" style="color: #5B6250">Mariazell (Austria-Forum)</a>, <a href="https://www.vatican.va/content/john-paul-ii/it/angelus/1989/documents/hf_jp-ii_ang_19890115.html" style="color: #5B6250">Mater gentium Slavorum (Vatikán)</a>, <a href="https://austria-forum.org/af/AustriaWiki/Steireranzug" style="color: #5B6250">Steireranzug (Austria-Forum)</a>, <a href="https://www.zumroger.at/speisen-getraenke" style="color: #5B6250">Jídelní lístek Zum Roger</a>, <a href="https://de.wikipedia.org/wiki/Schnapsen" style="color: #5B6250">Schnapsen (Wikipedie)</a>, <a href="https://www.alpenverein.at/freistadt/kontakt_services/cz/" style="color: #5B6250">Alpenverein Freistadt česky (pojištění a slevy pro členy)</a>, <a href="https://nominatim.openstreetmap.org/" style="color: #5B6250">Polohy Fölzkogelu a Karlhochkogelu (OpenStreetMap)</a>. Trasy: © Seznam.cz a přispěvatelé OpenStreetMap.</p>
 </footer>
 
 </main>
@@ -774,9 +792,9 @@
 
 </div>
 
-<script src="config.js"></script>
-<script src="js/runtime.js"></script>
-<script src="js/hon.js"></script>
-<script src="js/hlasovna.js"></script>
+<script src="config.js?v=20261023c"></script>
+<script src="js/runtime.js?v=20261023c"></script>
+<script src="js/hon.js?v=20261023c"></script>
+<script src="js/hlasovna.js?v=20261023c"></script>
 </body>
 </html>

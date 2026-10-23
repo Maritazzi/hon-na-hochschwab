@@ -3,7 +3,8 @@ window.__dcBoot(function () {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { show: 'all', peaks: {}, gear: {}, copied: '', kr: 0 };
+    // shared: společné odškrtávání ze Supabase ({id: {done, who}}), dodává js/hlasovna.js; me: kdo je přihlášený v prezenci
+    this.state = { show: 'all', peaks: {}, gear: {}, copied: '', kr: 0, shared: null, me: '' };
   }
   renderVals() {
     var self = this;
@@ -38,18 +39,54 @@ class Component extends DCLogic {
       { id: 'sev', name: 'Severinkogel', sub: '3. leč · o 3 m vyšší než Hutkogel, ať je čím se chlubit', el: '2 038 m' },
       { id: 'kraut', name: 'Krautgartenkogel', sub: '3. leč · zelná zahrádka, pak už jen dolů ke Krügerlu', el: '1 988 m' }
     ];
+    // Společné odškrtávání (výřad družiny, společná výstroj) jde přes Supabase. Bez něj se pamatuje jen v telefonu.
+    var sh = s.shared;
+    function sharedOn(id) { return sh ? !!(sh[id] && sh[id].done) : !!s.gear[id]; }
+    function sharedWho(id) { return sh && sh[id] && sh[id].done ? sh[id].who || '' : ''; }
+    function sharedToggle(id) {
+      if (sh && window.honShared) { window.honShared.toggle(id); return; }
+      var n = Object.assign({}, self.state.gear); n[id] = !n[id]; self.setState({ gear: n });
+    }
+    function stamperl(n) { return n === 1 ? '1 Stamperl' : (n < 5 ? n + ' Stamperly' : n + ' Stamperlů'); }
     var nPeaks = 0;
     var peaks = peakDefs.map(function (k) {
-      var on = !!s.peaks[k.id];
+      var id = 'v-' + k.id;
+      var on = sh ? sharedOn(id) : !!s.peaks[k.id];
+      var who = sharedWho(id);
       if (on) nPeaks += 1;
       return {
-        name: k.name, sub: k.sub, el: k.el, on: on,
-        bg: on ? loden : '#F4ECD8', fg: on ? '#EEE9D9' : '#1D2418', subc: on ? '#B9BDA4' : '#5B6250',
+        name: k.name, el: k.el, on: on, mark: on ? '✓' : '',
+        sub: on ? '✓ ' + (who ? who + ' · ' : '') + 'Sepp nalévá Stamperl' : k.sub,
+        bg: on ? loden : '#F4ECD8', fg: on ? '#EEE9D9' : '#1D2418', subc: on ? '#CDA95C' : '#5B6250',
         bd: k.big ? '#94742E' : (on ? loden : '#C5B48E'),
-        toggle: function () { var n = Object.assign({}, self.state.peaks); n[k.id] = !n[k.id]; self.setState({ peaks: n }); }
+        toggle: function () {
+          if (sh && window.honShared) { window.honShared.toggle(id); return; }
+          var n = Object.assign({}, self.state.peaks); n[k.id] = !n[k.id]; self.setState({ peaks: n });
+        }
       };
     });
-    var tally = 'Výřad: ' + nPeaks + ' z ' + peakDefs.length + ' vrcholů' + (nPeaks === peakDefs.length ? ' · Výřad kompletní. Sepp nalévá Stamperl.' : '');
+    var tally = nPeaks === peakDefs.length
+      ? 'Výřad kompletní: ' + peakDefs.length + ' vrcholů, ' + stamperl(nPeaks) + '. Sepp jde spát.'
+      : 'Výřad družiny: ' + nPeaks + ' ze ' + peakDefs.length + ' vrcholů' + (nPeaks ? ' · Sepp nalil ' + stamperl(nPeaks) : ' · na každém vrcholu Sepp nalévá Stamperl');
+    var hint = !sh ? 'Odškrtnutí se pamatuje jen v tomhle telefonu.'
+      : (s.shareErr ? 'Odškrtnutí se neuložilo, zkus to znovu.'
+      : (s.me ? 'Odškrtáváš jako ' + s.me + ', vidí to celá družina.' : 'Vidí to celá družina. Odškrtávat jde po přihlášení v prezenci.'));
+    var sharedDefs = [
+      { id: 's-grasser', name: 'Grasserhütte zarezervovaná', sub: 'hlasem, 1. noc' },
+      { id: 's-schiestl', name: 'Schiestlhaus zarezervovaný', sub: 'hlasem, po–pá 10–11 h, 2. noc' },
+      { id: 's-schuster', name: 'Schuster a Roger', sub: 'jen při čtvrtku: apartmány a večeře nahlásit předem' },
+      { id: 's-znamky', name: 'Dálniční známky na obě auta', sub: 'online předem' },
+      { id: 's-karty', name: 'Karty', sub: 'mariášky na prší, nese Mari' },
+      { id: 's-stan', name: 'Stan pro Smekyho', sub: 'jen jako rekvizita, spí se na chatě' }
+    ];
+    var gearShared = sharedDefs.map(function (g) {
+      var on = sharedOn(g.id), who = sharedWho(g.id);
+      return {
+        name: g.name, sub: g.sub + (who ? ' · ✓ ' + who : ''), on: on, mark: on ? '✓' : '',
+        col: on ? '#5B6250' : '#1D2418', deco: on ? 'line-through' : 'none',
+        toggle: function () { sharedToggle(g.id); }
+      };
+    });
     var gearDefs = [
       { id: 'sack', name: 'Hüttenschlafsack', sub: 'na Grasserhütte povinný' },
       { id: 'lamp', name: 'Čelovka', sub: 'východ slunce na vrcholu ve 4:51' },
@@ -57,24 +94,21 @@ class Component extends DCLogic {
       { id: 'rain', name: 'Nepromokavá vrstva', sub: 'odpoledne prší skoro každý druhý den, membránu konzultujte s Gregym' },
       { id: 'plugs', name: 'Špunty do uší', sub: 'pokoj pro dvanáct a Pavlovy historky' },
       { id: 'cash', name: 'Hotovost', sub: '„bankáč je u pizzy“ tady neprojde' },
-      { id: 'ins', name: 'Pojištění s horskou záchranou', sub: 'v Rakousku se záchrana platí' },
+      { id: 'ins', name: 'Pojištění s horskou záchranou', sub: 'v Rakousku se záchrana platí, viz Alpenverein níž' },
       { id: 'map', name: 'Mapy.cz staženy offline', sub: 'signál v revíru nezaručujeme' },
-      { id: 'vig', name: 'Rakouská dálniční známka', sub: 'online předem' },
-      { id: 'res', name: 'Obě chaty zarezervované', sub: 'hlasem, Schiestlhaus po–pá 10–11 h' },
-      { id: 'hat', name: 'Klobouk s Gamsbartem', sub: 'dobrovolný, ale Sepp si to pamatuje' },
-      { id: 'tent', name: 'Stan pro Smekyho', sub: 'jen jako rekvizita, spí se na chatě' }
+      { id: 'hat', name: 'Klobouk s Gamsbartem', sub: 'dobrovolný, ale Sepp si to pamatuje' }
     ];
     var nGear = 0;
     var gear = gearDefs.map(function (g) {
       var on = !!s.gear[g.id];
       if (on) nGear += 1;
       return {
-        name: g.name, sub: g.sub, on: on,
+        name: g.name, sub: g.sub, on: on, mark: on ? '✓' : '',
         col: on ? '#5B6250' : '#1D2418', deco: on ? 'line-through' : 'none',
         toggle: function () { var n = Object.assign({}, self.state.gear); n[g.id] = !n[g.id]; self.setState({ gear: n }); }
       };
     });
-    function setAllGear(v) { var n = {}; gearDefs.forEach(function (g) { n[g.id] = v; }); self.setState({ gear: n }); }
+    function setAllGear(v) { var n = Object.assign({}, self.state.gear); gearDefs.forEach(function (g) { n[g.id] = v; }); self.setState({ gear: n }); }
     var says = [
       'Střízlivý Pražan v revíru. Sepp volá Bergrettung.',
       'Prost! První je nejlepší, proto se pije hned.',
@@ -115,8 +149,8 @@ class Component extends DCLogic {
       d1: d1, d2: d2, d3: d3, loden: loden,
       tabs: tabs,
       mv: { d1: vis('d1'), d2: vis('d2'), d3: vis('d3') },
-      peaks: peaks, tally: tally,
-      gear: gear, gearCount: nGear + ' / ' + gearDefs.length,
+      peaks: peaks, tally: tally, hint: hint,
+      gearShared: gearShared, gear: gear, gearCount: nGear + ' / ' + gearDefs.length,
       gearAll: function () { setAllGear(true); },
       gearReset: function () { setAllGear(false); },
       kr: kr,
