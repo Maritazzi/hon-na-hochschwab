@@ -83,3 +83,9 @@ details.var[open] > summary{margin-bottom:10px}
   .lec-sum > div:first-child > div[aria-hidden="true"] b{font-size:26px!important}
   .lec-sum h2{font-size:25px!important}
 }
+
+/* Seppova vlastivěda: široká karta nahoře (text ve dvou sloupcích), pod ní dvě menší */
+.vl-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.vl-grid > :first-child{grid-column:1 / -1}
+.vl-grid > :first-child p{columns:2 22em;column-gap:28px}
+@media (max-width:600px){.vl-grid{grid-template-columns:minmax(0,1fr)}}
