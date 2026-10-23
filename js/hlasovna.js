@@ -1,11 +1,11 @@
-/* Hlasovna valné hromady (Supabase) a spodní přehrávač dechovky (Spotify).
+/* Hlasovna valné hromady (Supabase).
  * Nastavení je v config.js. Id otázek, možností a jména v CREW musí sedět se supabase/schema.sql. */
 var CFG = window.HON_CONFIG || {};
 var SUPABASE_URL = CFG.supabaseUrl || '';
 var SUPABASE_KEY = CFG.supabaseKey || '';
 
 (function () {
-  // --- Dechovka v doku: hraje popořadě a po posledním kusu zase od Rosamunde ---
+  // Skladby playlistu Hon na Hochschwab ve Spotify, v pořadí playlistu. Z nich jsou možnosti usnesení o hymně.
   // [Spotify id, název, interpret, id možnosti v usnesení o hymně (musí sedět se supabase/schema.sql)]
   var TRACKS = [
     ['6FT3Zcgo1RkVmBcqyLsdyb', 'Rosamunde', 'Peter Alexander', 'rosamunde'],
@@ -16,84 +16,6 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
     ['1a2W0n1Z43jDBm4xT4y79s', 'Alter Jägermarsch', 'Blasmusikverein St. Hubertus', 'jager'],
     ['58Y9PExoI3NcjW7NGJZEML', 'Škoda lásky', 'Vejvodova kapela', 'skoda']
   ];
-  var dock = document.getElementById('dock');
-  var slot = document.getElementById('dock-frame');
-  var pick = document.getElementById('dock-track');
-  var cur = 0, ctl = null, frame = null, booted = false, playing = false;
-
-  TRACKS.forEach(function (t, i) {
-    var o = document.createElement('option');
-    o.value = String(i);
-    pick.appendChild(o);
-  });
-  // Hymna honu (usnesení č. 6) dostane v seznamu korunku
-  function labelTracks(hymn) {
-    TRACKS.forEach(function (t, i) {
-      pick.options[i].textContent = (i + 1) + '. ' + (t[3] === hymn ? '👑 ' : '') + t[1] + ' · ' + t[2];
-    });
-  }
-  labelTracks('');
-  function embedUrl(i) { return 'https://open.spotify.com/embed/track/' + TRACKS[i][0] + '?utm_source=generator'; }
-  function fit() { document.body.style.paddingBottom = dock.hidden ? '' : (dock.offsetHeight + 16) + 'px'; }
-
-  function setTrack(i, autoplay) {
-    cur = (i + TRACKS.length) % TRACKS.length;
-    playing = false;
-    pick.value = String(cur);
-    if (ctl) { ctl.loadUri('spotify:track:' + TRACKS[cur][0]); if (autoplay) ctl.play(); }
-    else if (frame) frame.src = embedUrl(cur);
-  }
-  // Bez iFrame API od Spotify (blokované, pomalé) zůstane obyčejný embed, jen bez přechodu na další kus.
-  function plainEmbed() {
-    if (ctl || frame) return;
-    frame = document.createElement('iframe');
-    frame.title = 'Dechovka ze Spotify';
-    frame.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
-    frame.src = embedUrl(cur);
-    slot.parentNode.replaceChild(frame, slot);
-  }
-  function boot() {
-    booted = true;
-    var fallback = setTimeout(plainEmbed, 5000);
-    window.onSpotifyIframeApiReady = function (api) {
-      if (frame) return;
-      clearTimeout(fallback);
-      api.createController(slot, { uri: 'spotify:track:' + TRACKS[cur][0], width: '100%', height: 80 }, function (c) {
-        ctl = c;
-        c.addListener('ready', function () { c.play(); fit(); });
-        // Konec kusu Spotify hlásí jen pozicí rovnou délce (pauzu ne). Zprávy od předchozího kusu se ignorují.
-        c.addListener('playback_update', function (e) {
-          var d = e.data || {};
-          if (d.playingURI && d.playingURI !== 'spotify:track:' + TRACKS[cur][0]) return;
-          if (!d.isPaused && d.position > 0) playing = true;
-          if (playing && d.duration > 0 && d.position >= d.duration - 500) setTrack(cur + 1, true);
-        });
-      });
-    };
-    var s = document.createElement('script');
-    s.src = 'https://open.spotify.com/embed/iframe-api/v1';
-    s.async = true;
-    s.onerror = function () { clearTimeout(fallback); plainEmbed(); };
-    document.head.appendChild(s);
-  }
-  function openDock(ev) {
-    if (ev) ev.preventDefault();
-    dock.hidden = false; fit();
-    if (!booted) boot();
-    else if (ctl) ctl.resume();
-    else if (frame && !frame.getAttribute('src')) frame.src = embedUrl(cur);
-  }
-  var opener = document.getElementById('rosamunde-open');
-  if (opener) opener.addEventListener('click', openDock);
-  pick.addEventListener('change', function () { setTrack(+pick.value, true); });
-  document.getElementById('dock-prev').addEventListener('click', function () { setTrack(cur - 1, true); });
-  document.getElementById('dock-next').addEventListener('click', function () { setTrack(cur + 1, true); });
-  document.getElementById('dock-close').addEventListener('click', function () {
-    if (ctl) ctl.pause();
-    else if (frame) frame.removeAttribute('src');
-    dock.hidden = true; fit();
-  });
-  window.addEventListener('resize', fit);
 
   // --- Hlasovna: prezence nahoře ve valné hromadě (#hlasovna), hlasování u každého usnesení ([data-hv="id"]) ---
   var CREW = ['Mari', 'Smeky', 'Lencoš', 'Gregy', 'Jindřich', 'Pavel', 'Vlasta'];
@@ -189,7 +111,6 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
 
   function render() {
     renderRoll();
-    var hymn = '';
     QUESTIONS.forEach(function (q) {
       var box = document.querySelector('[data-hv="' + q.id + '"]');
       if (!box) return;
@@ -208,7 +129,6 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
           else state = 'Rovnost, rozhoduje Jindřich';
         }
       }
-      if (q.id === 'hymna' && ok) hymn = leaders[0][0];
       var mine = (qv.filter(function (v) { return v.voter === me; })[0] || {}).option;
       var opts = q.options.map(function (o) {
         var who = counts[o[0]] || [];
@@ -233,7 +153,6 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
       box.appendChild(el('div', { class: 'hv-opts' }, opts));
       if (failed === q.id) box.appendChild(el('p', { class: 'hv-status err', role: 'status', text: 'Hlas se neuložil. Zkus to znovu za chvíli.' }));
     });
-    labelTracks(hymn);
   }
 
   function load() {
