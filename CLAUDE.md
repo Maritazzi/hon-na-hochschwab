@@ -10,7 +10,7 @@ Statická stránka (bez buildu a bez frameworku) pro sedm kamarádů z Prahy: t�
 - `js/hlasovna.js`: hlasovna valné hromady (Supabase REST) a spodní přehrávač Spotify. Prezence (výběr jména a prezenční listina) se vykresluje do `#hlasovna` nahoře ve valné hromadě, hlasování do `<div class="hv-q" data-hv="id">` hned u každého usnesení v `index.html`. Otázky jsou v `QUESTIONS`, jména v `CREW`, skladby přehrávače v `TRACKS` (Spotify id, název, interpret, id možnosti v usnesení o hymně). Možnosti hymny se berou z `TRACKS`, takže nová skladba potřebuje i migraci. Odkaz na celý playlist ve Spotify (`open.spotify.com/playlist/3s5K9kPj1vMoTbSY9C9SZU`) je v doku a v záhlaví, playlist spravuje Mari ve svém Spotify. Přehrávač jede přes Spotify iFrame API. Konec kusu Spotify hlásí jen pozicí rovnou délce, bez pauzy.
 - `config.js`: Supabase URL a publishable key. Oba jsou veřejné. Secret ani service_role klíč sem nikdy nepatří.
 - `supabase/schema.sql`: tabulka `votes` s RLS. Povolená id otázek, možnosti každé otázky (`votes_option_valid`) a jména jsou v check constraintech a musí sedět s `js/hlasovna.js`. Při změně uprav schema.sql a připrav i další `supabase/migrace-NN-*.sql`, kterou uživatel spustí v SQL Editoru.
-- `css/style.css`, `assets/ondra-nacrt.jpg` (Ondrův náčrt trasy 1C).
+- `css/style.css`, `assets/ondra-nacrt.jpg` (Ondrův náčrt trasy 1C), `assets/pohlednice-*.jpg` (pohlednice: cedule s heslem v záhlaví, ta je i náhledem odkazu `og:image`, Jägerstube u plánu lovu, Stammtisch ve výčepu). Pohlednice mají natočení a připínáčky. Rozmazávací `filter: {{fx.blur}}` nikdy nedávej na stejný prvek jako `transform`, ale na obal, jinak na iPhonu obrázek mizí.
 
 ## Lokální náhled
 
