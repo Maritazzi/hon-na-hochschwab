@@ -33,4 +33,4 @@ Tabulka dovolí jen číst hlasy, hlasovat a hlas změnit, a to jen za sedm jmen
 
 ## Přehrávač
 
-Tlačítko „▶ Dechovka ke skrolování“ otevře přehrávač Spotify ve spodní liště, takže hraje dál při skrolování. Hraje popořadě sedm kusů ze seznamu `TRACKS` v `js/hlasovna.js`: začíná Rosamunde, pak Böhmischer Traum, a po posledním zase od začátku. Kus jde přepnout šipkami nebo vybrat ze seznamu. Celou písničku pustí jen tomu, kdo je v prohlížeči přihlášený do Spotify, ostatním 30sekundovou ukázku.
+Tlačítko „▶ Dechovka ke skrolování“ otevře přehrávač Spotify ve spodní liště, takže hraje dál při skrolování. Hraje popořadě sedm kusů ze seznamu `TRACKS` v `js/hlasovna.js`: začíná Rosamunde, pak Böhmischer Traum, a po posledním zase od začátku. Kus jde přepnout šipkami nebo vybrat ze seznamu. Na iPhonu hraje přehrávač ve stránce vždycky jen 30s ukázky, proto je v liště i v záhlaví odkaz na celý playlist v aplikaci Spotify: https://open.spotify.com/playlist/3s5K9kPj1vMoTbSY9C9SZU Celou písničku pustí jen tomu, kdo je v prohlížeči přihlášený do Spotify, ostatním 30sekundovou ukázku.

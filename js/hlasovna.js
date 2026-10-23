@@ -19,7 +19,6 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
   var dock = document.getElementById('dock');
   var slot = document.getElementById('dock-frame');
   var pick = document.getElementById('dock-track');
-  var link = document.getElementById('dock-link');
   var cur = 0, ctl = null, frame = null, booted = false, playing = false;
 
   TRACKS.forEach(function (t, i) {
@@ -41,7 +40,6 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
     cur = (i + TRACKS.length) % TRACKS.length;
     playing = false;
     pick.value = String(cur);
-    link.href = 'https://open.spotify.com/track/' + TRACKS[cur][0];
     if (ctl) { ctl.loadUri('spotify:track:' + TRACKS[cur][0]); if (autoplay) ctl.play(); }
     else if (frame) frame.src = embedUrl(cur);
   }

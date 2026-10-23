@@ -54,7 +54,8 @@ div.sc[style*="clip-path"] > span{white-space:normal!important}
 #dock select{flex:1 1 160px;min-width:0;max-width:280px;min-height:44px;padding:4px 8px;border:1px solid #94742E;border-radius:3px;background:#26321F;color:#EEE9D9;font-family:'Alegreya',Georgia,serif;font-size:16px;letter-spacing:0;font-weight:500}
 #dock select option{background:#F4ECD8;color:#1D2418}
 #dock #dock-prev,#dock #dock-next,#dock #dock-close{min-width:44px;padding:4px 10px}
-@media (max-width:600px){#dock #dock-link{display:none}}
+#dock-link .short{display:none}
+@media (max-width:600px){#dock #dock-prev,#dock-link .long{display:none}#dock-link .short{display:inline}#dock select{flex-basis:100px}}
 
 /* Rozbalovací leče (Hon v kostce) a varianty tras ve valné hromadě */
 details.lec{background:#F4ECD8;border:1px solid #C5B48E;border-radius:3px}
