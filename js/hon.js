@@ -114,7 +114,7 @@ class Component extends DCLogic {
       'Prost! První je nejlepší, proto se pije hned.',
       'Zum Wohl! Druhý je kvůli symetrii.',
       'Třetí. Pavel začíná historku. Zbývají dvě hodiny padesát minut.',
-      'Čtvrtý. Gregy vysvětluje, proč má jeho bunda lepší membránu než tvoje.',
+      'Čtvrtý. Gregy vysvětluje, proč má jeho bunda lepší membránu než ta vaše.',
       'Pátý. Mari preventivně kontroluje batoh. Kameny zatím žádné.',
       'Šestý. Lencoš ke každému pivu rozdává proteinovou tyčinku. Prý aby se to počítalo jako regenerace.',
       'Sedmý. Smeky jde ven zkontrolovat, jestli by se pod širákem nespalo líp.',

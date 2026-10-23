@@ -33,7 +33,7 @@ gh api -X POST "repos/{owner}/hon-na-hochschwab/pages" -f "source[branch]=main" 
 ## Obsah a tón
 
 - Píše se česky. Vypravěčem a průvodcem je rakouský Oberjäger Sepp Gamsbichler, který vede pražskou družinu. Nikde nepiš, že je smyšlený.
-- Hlas: Sepp v uvozovkách a ve svém úvodu v záhlaví družině vyká („vy“). Všechno ostatní je psané za družinu („my“, „uvidíme“, „jdeme“).
+- Hlas: Sepp v uvozovkách a ve svém úvodu v záhlaví družině vyká („vy“). Všechno ostatní je psané za družinu („my“, „uvidíme“, „jdeme“). Výjimka jsou ovládací prvky a nápovědy u prezence, hlasování a odškrtávání: ty tykají jednotlivci („Vyber se“, „Hlasuješ jako…“), jsou to kamarádi. Sepp o sobě občas mluví ve třetí osobě, to je jeho styl.
 - Humor je česká satira „na hraně“, ne poučky. Heslo zní „Všechno nejlepší hned!“, německy „Alles Gute sofort!“.
 - Družina má 7 lidí: Mari (Dan, autor oběžníku), Smeky, Lencoš, Gregy, Jindřich, Pavel, Vlasta. Ondra není člen družiny ani nehlasuje. Je zvěd ze spřátelené party, který revír prošel v roce 2024.
 - Leče jsou popsané jen jednou, jako rozbalovací bloky v „Hon v kostce“ (`details.lec`, id `lec-1` až `lec-3`): zavřené ukazují název, km, převýšení, čas a jednu větu, rozbalené profil, rozkaz dne a mapy. Obsahují jen základní trasu (1A, 2A a 3. leč). Varianty (1B, 1C, 2B–2D) a odjezd čtvrtek/pátek patří jen do valné hromady, varianty tras jsou tam sbalené (`details.var`). Trasy jsou orientační: usnesení č. 3 a 4 jsou nezávazná, jen nálada bez kvóra a bez vítěze, rozhoduje se na rozcestí. Ostatní usnesení (odjezd, termín, Krügerl, hymna, východ slunce) platí při čtyřech hlasech.
