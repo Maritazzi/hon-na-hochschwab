@@ -125,7 +125,7 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
       ['spime', 'Spíme · Sepp to vyfotí'] ] }
   ];
   var root = document.getElementById('hlasovna');
-  if (!root || !SUPABASE_URL || !SUPABASE_KEY) return;   // bez nastavení zůstávají jen ankety do WhatsAppu
+  if (!root || !SUPABASE_URL || !SUPABASE_KEY) return;   // bez nastavení v config.js se hlasovna neukáže
 
   var base = SUPABASE_URL.replace(/\/+$/, '') + '/rest/v1/votes';
   function headers(extra) {
@@ -223,7 +223,7 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
     return fetch(base + '?select=question,voter,option', { headers: headers() })
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (rows) { votes = rows; lastLoad = new Date(); if (!busy) { statusMsg = ''; statusErr = false; } render(); })
-      .catch(function () { setStatus('Hlasy se nepodařilo načíst. Zkontroluj připojení, nebo hlasuj zatím přes WhatsApp níž.', true); });
+      .catch(function () { setStatus('Hlasy se nepodařilo načíst. Zkontroluj připojení a obnov stránku.', true); });
   }
   function castVote(question, option) {
     if (!me || busy) return;

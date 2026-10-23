@@ -1,4 +1,4 @@
-/* Logika stránky: stav, výpočty a texty generované skriptem (hlášky, plán lovu, výstroj, ankety). */
+/* Logika stránky: stav, výpočty a texty generované skriptem (hlášky, plán lovu, výstroj). */
 window.__dcBoot(function () {
 class Component extends DCLogic {
   constructor(props) {
@@ -99,15 +99,6 @@ class Component extends DCLogic {
     };
     var mugs = [];
     for (var i = 0; i < Math.min(kr, 20); i++) { mugs.push({ i: i }); }
-    var polls = {
-      p1: "Usnesení č. 3, nezávazné (rozhodne se na rozcestí): 1. leč, kudy na Fölzalm?\n1A Ondrova trasa · 11,4 km · 5:12 h\n1B Totéž + odbočka na Windgrube a Schönleitenhaus · 14,9 km · 6:10 h\n1C Ondrův oblouk přes Fölzklamm · 16,6 km · 8:30 h · jen při čtvrtku",
-      p2: "Usnesení č. 4, nezávazné (rozhodne se na rozcestí): 2. leč, co s vrcholem?\n2A Klasika: k chatě, vrchol nalehko\n2B Klasika + G'hacktkogel · +1:20 h\n2C Klasika + Ringkamp · +2:45 h\n2D Žebříky rovnou na vrchol",
-      p3: "Usnesení č. 2: termín 2027 (pá–ne, při odjezdu ve čtvrtek o den dřív)?\n18.–20. 6.\n25.–27. 6.\n11.–13. 6.",
-      p0: "Usnesení č. 1: kdy vyrazit z Prahy?\nČtvrtek po obědě · Krügerl na přivítání, noc v Seewiesenu\nPátek v 5:00 · rovnou na trasu, střízlivě",
-      p4: "Usnesení č. 5: první Krügerl?\nGösser Märzen\nMurauer Märzen\nPuntigamer\nZwickl\nRadler\nHimbeerkracherl (řidič)",
-      p5: "Usnesení č. 6: hymna honu?\nRosamunde · Peter Alexander\nBöhmischer Traum · Die Innsbrucker Böhmische\nŠkoda lásky · Vejvodova kapela\nEgerländer Musikantenmarsch · Ernst Mosch\nAuf der Vogelwiese · Ernst Mosch\nErzherzog-Johann-Jodler-Marsch · Musikverein Dechantskirchen\nAlter Jägermarsch · Blasmusikverein St. Hubertus",
-      p6: "Usnesení č. 7: na východ slunce na vrchol (4:51)?\nVšichni nahoru · budíček ve čtyři\nJen dobrovolníci · ostatní spí\nSpíme · Sepp to vyfotí"
-    };
     function cp(id, text, base) {
       var done = s.copied === id;
       return {
@@ -130,7 +121,7 @@ class Component extends DCLogic {
       gearReset: function () { setAllGear(false); },
       kr: kr,
       krSays: says[Math.min(kr, says.length - 1)],
-      fx: fx, mugs: mugs, polls: polls,
+      fx: fx, mugs: mugs,
       krReset: function () { self.setState({ kr: 0 }); },
       krUp: function () { self.setState({ kr: (self.state.kr || 0) + 1 }); },
       krDown: function () { self.setState({ kr: Math.max(0, (self.state.kr || 0) - 1) }); },
@@ -143,14 +134,7 @@ class Component extends DCLogic {
         rTel: cp('rTel', '+436649185963', 'Kopírovat'),
         schTel: cp('schTel', '+43386324101', 'Kopírovat'),
         vTel2: cp('vTel2', '+43386124184', 'Kopírovat'),
-        pGps: cp('pGps', '47.62040, 15.26709', 'GPS'),
-        poll1: cp('poll1', polls.p1, 'Kopírovat anketu'),
-        poll2: cp('poll2', polls.p2, 'Kopírovat anketu'),
-        poll3: cp('poll3', polls.p3, 'Kopírovat anketu'),
-        poll0: cp('poll0', polls.p0, 'Kopírovat anketu'),
-        poll4: cp('poll4', polls.p4, 'Kopírovat anketu'),
-        poll5: cp('poll5', polls.p5, 'Kopírovat anketu'),
-        poll6: cp('poll6', polls.p6, 'Kopírovat anketu')
+        pGps: cp('pGps', '47.62040, 15.26709', 'GPS')
       }
     };
   }

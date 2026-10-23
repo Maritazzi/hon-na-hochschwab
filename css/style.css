@@ -55,3 +55,27 @@ div.sc[style*="clip-path"] > span{white-space:normal!important}
 #dock select option{background:#F4ECD8;color:#1D2418}
 #dock #dock-prev,#dock #dock-next,#dock #dock-close{min-width:44px;padding:4px 10px}
 @media (max-width:600px){#dock #dock-link{display:none}}
+
+/* Rozbalovací leče (Hon v kostce) a varianty tras ve valné hromadě */
+details.lec{background:#F4ECD8;border:1px solid #C5B48E;border-radius:3px}
+details > summary{list-style:none;cursor:pointer}
+details > summary::-webkit-details-marker{display:none}
+details > summary:focus-visible{outline:2px solid #94742E;outline-offset:2px}
+.lec-sum{display:flex;flex-direction:column;gap:8px;padding:14px 16px}
+.lec-stat{font-weight:700;font-size:18px}
+.lec-hl{max-width:72ch}
+.lec-toggle{align-self:flex-start;display:inline-flex;align-items:center;min-height:44px;padding:4px 14px;border:1px solid #94742E;border-radius:3px;background:#EADFC6;font-weight:700;font-size:14px;letter-spacing:.06em}
+.lec-toggle::before{content:'Profil, rozkaz dne a mapy ▾'}
+details[open] > summary .lec-toggle::before{content:'Sbalit ▴'}
+.lec-body{display:flex;flex-direction:column;gap:18px;padding:16px;border-top:3px double #94742E}
+details.var > summary{display:inline-block;padding:10px 14px;border:1px solid #94742E;border-radius:3px;background:#F4ECD8;font-weight:700;font-size:15px;letter-spacing:.06em}
+details.var > summary::after{content:' ▾'}
+details.var[open] > summary::after{content:' ▴'}
+details.var[open] > summary{margin-bottom:10px}
+@media (max-width:520px){
+  details.lec:not([open]) .lec-sum div.sc[style*="clip-path"]{display:none!important}
+  .lec-sum > div:first-child{gap:12px!important}
+  .lec-sum > div:first-child > div[aria-hidden="true"]{width:62px!important;height:76px!important}
+  .lec-sum > div:first-child > div[aria-hidden="true"] b{font-size:26px!important}
+  .lec-sum h2{font-size:25px!important}
+}
