@@ -12,7 +12,7 @@ create table if not exists public.votes (
     (question = 'termin' and option in ('18-20-6', '25-27-6', '11-13-6')) or
     (question = 'lec1'   and option in ('1A', '1B', '1C')) or
     (question = 'lec2'   and option in ('2A', '2B', '2C', '2D')) or
-    (question = 'pivo'   and option in ('gosser', 'murauer', 'puntigamer', 'zwickl', 'radler', 'himbeer')) or
+    (question = 'pivo'   and option in ('gosser', 'murauer', 'puntigamer', 'zwickl', 'radler')) or
     (question = 'hymna'  and option in ('rosamunde', 'traum', 'skoda', 'eger', 'vogelwiese', 'johann', 'jager')) or
     (question = 'vychod' and option in ('vsichni', 'dobrovolnici', 'spime'))
   )

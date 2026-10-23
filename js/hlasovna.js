@@ -117,7 +117,7 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
       ['2D', '2D Žebříky rovnou na vrchol'] ] },
     { id: 'pivo', title: 'Usnesení č. 5: první Krügerl', options: [
       ['gosser', 'Gösser Märzen'], ['murauer', 'Murauer Märzen'], ['puntigamer', 'Puntigamer'],
-      ['zwickl', 'Zwickl'], ['radler', 'Radler'], ['himbeer', 'Himbeerkracherl (řidič)'] ] },
+      ['zwickl', 'Zwickl'], ['radler', 'Radler'] ] },
     { id: 'hymna', title: 'Usnesení č. 6: hymna honu', options: TRACKS.map(function (t) { return [t[3], t[1] + ' · ' + t[2]]; }) },
     { id: 'vychod', title: 'Usnesení č. 7: na východ slunce na vrchol (4:51)', options: [
       ['vsichni', 'Všichni nahoru · budíček ve čtyři'],
