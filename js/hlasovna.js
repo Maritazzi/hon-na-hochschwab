@@ -9,12 +9,12 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
   // [Spotify id, název, interpret, id možnosti v usnesení o hymně (musí sedět se supabase/schema.sql)]
   var TRACKS = [
     ['6FT3Zcgo1RkVmBcqyLsdyb', 'Rosamunde', 'Peter Alexander', 'rosamunde'],
-    ['2Gra5abgzOrtL8bxx3XDOm', 'Böhmischer Traum', 'Die Innsbrucker Böhmische', 'traum'],
-    ['7gfCRmKIC6pKdOXhGPa8v3', 'Škoda lásky', 'Vejvodova kapela', 'skoda'],
+    ['6r8pJYmX7u0MxmB7dznmkE', 'Böhmischer Traum', 'Gasterländer Blasmusikanten', 'traum'],
     ['4gr49XsRR5AbpihGZmIUAS', 'Egerländer Musikantenmarsch', 'Ernst Mosch', 'eger'],
     ['4pYwTYhwmBKfalocihRrlb', 'Auf der Vogelwiese', 'Ernst Mosch', 'vogelwiese'],
     ['6C7qI1CiQtNPdAxkzgkQPw', 'Erzherzog-Johann-Jodler-Marsch', 'Musikverein Dechantskirchen', 'johann'],
-    ['1a2W0n1Z43jDBm4xT4y79s', 'Alter Jägermarsch', 'Blasmusikverein St. Hubertus', 'jager']
+    ['1a2W0n1Z43jDBm4xT4y79s', 'Alter Jägermarsch', 'Blasmusikverein St. Hubertus', 'jager'],
+    ['58Y9PExoI3NcjW7NGJZEML', 'Škoda lásky', 'Vejvodova kapela', 'skoda']
   ];
   var dock = document.getElementById('dock');
   var slot = document.getElementById('dock-frame');
