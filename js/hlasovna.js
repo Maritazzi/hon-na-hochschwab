@@ -134,7 +134,7 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
     })));
     root.appendChild(el('div', { class: 'hv-who' }, [
       el('label', { for: 'hv-voter', text: 'Kdo hlasuje:' }), sel,
-      el('span', { class: 'hv-status', text: me ? 'Hlasuj rovnou u každého usnesení níž. Hlas jde kdykoli změnit.' : 'Vyber se, pak hlasuj u každého usnesení níž.' })
+      el('span', { class: 'hv-status', text: me ? 'Hlasuj rovnou u každého usnesení níž. Jde vybrat víc možností, dalším kliknutím hlas zrušíš.' : 'Vyber se, pak hlasuj u každého usnesení níž.' })
     ]));
     var all = QUESTIONS.length, full = 0;
     var chips = CREW.map(function (n) {
@@ -154,7 +154,7 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
       var box = document.querySelector('[data-hv="' + q.id + '"]');
       if (!box) return;
       var qv = votes.filter(function (v) { return v.question === q.id; });
-      var voters = qv.length;
+      var voters = qv.map(function (v) { return v.voter; }).filter(function (v, i, a) { return a.indexOf(v) === i; }).length;
       var counts = {};
       qv.forEach(function (v) { (counts[v.option] = counts[v.option] || []).push(v.voter); });
       var max = 0, leaders = [];
@@ -168,11 +168,11 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
           else state = 'Rovnost, rozhoduje Jindřich';
         }
       }
-      var mine = (qv.filter(function (v) { return v.voter === me; })[0] || {}).option;
+      var mine = qv.filter(function (v) { return v.voter === me; }).map(function (v) { return v.option; });
       var opts = q.options.map(function (o) {
         var who = counts[o[0]] || [];
         var pct = Math.round(who.length / 7 * 100);
-        var b = el('button', { type: 'button', class: 'hv-opt' + (mine === o[0] ? ' mine' : ''), 'aria-pressed': mine === o[0] ? 'true' : 'false',
+        var b = el('button', { type: 'button', class: 'hv-opt' + (mine.indexOf(o[0]) >= 0 ? ' mine' : ''), 'aria-pressed': mine.indexOf(o[0]) >= 0 ? 'true' : 'false',
           onclick: function () { castVote(q.id, o[0]); } }, [
           el('span', { class: 'bar', style: 'width:' + pct + '%' }),
           el('span', { text: o[1] }),
@@ -182,7 +182,7 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
         if (busy) b.disabled = true;
         return b;
       });
-      var who = me ? el('span', { class: 'hv-q-label', text: 'Hlasuješ jako ' + me })
+      var who = me ? el('span', { class: 'hv-q-label', text: 'Hlasuješ jako ' + me + ' · jde vybrat víc možností' })
                    : el('button', { type: 'button', class: 'hv-q-login', onclick: goLogin, text: 'Nejdřív se přihlas v prezenci ↑' });
       box.hidden = false;
       box.textContent = '';
@@ -203,12 +203,20 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
   function castVote(question, option) {
     if (busy) return;
     if (!me) { goLogin(); return; }
+    // Kliknutí přepíná: nová možnost se přidá, už vybraná se zruší
+    var has = votes.some(function (v) { return v.question === question && v.voter === me && v.option === option; });
     busy = question; failed = ''; render();
-    fetch(base + '?on_conflict=question,voter', {
-      method: 'POST',
-      headers: headers({ Prefer: 'resolution=merge-duplicates,return=minimal' }),
-      body: JSON.stringify([{ question: question, voter: me, option: option, updated_at: new Date().toISOString() }])
-    }).then(function (r) {
+    (has
+      ? fetch(base + '?question=eq.' + encodeURIComponent(question) + '&voter=eq.' + encodeURIComponent(me) + '&option=eq.' + encodeURIComponent(option), {
+          method: 'DELETE',
+          headers: headers({ Prefer: 'return=minimal' })
+        })
+      : fetch(base, {
+          method: 'POST',
+          headers: headers({ Prefer: 'resolution=ignore-duplicates,return=minimal' }),
+          body: JSON.stringify([{ question: question, voter: me, option: option, updated_at: new Date().toISOString() }])
+        })
+    ).then(function (r) {
       if (!r.ok) throw new Error(r.status);
       busy = ''; return load();
     }).catch(function () {

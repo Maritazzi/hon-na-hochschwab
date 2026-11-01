@@ -6,7 +6,7 @@ create table if not exists public.votes (
   voter      text not null check (voter in ('Mari', 'Smeky', 'Lencoš', 'Gregy', 'Jindřich', 'Pavel', 'Vlasta')),
   option     text not null,
   updated_at timestamptz not null default now(),
-  primary key (question, voter),
+  primary key (question, voter, option),
   constraint votes_option_valid check (
     (question = 'odjezd' and option in ('ct', 'pa')) or
     (question = 'termin' and option in ('18-20-6', '25-27-6', '11-13-6')) or
@@ -20,15 +20,17 @@ create table if not exists public.votes (
 
 alter table public.votes enable row level security;
 
--- Kdo má odkaz, vidí hlasy a může hlasovat nebo svůj hlas změnit. Mazat nejde.
+-- Kdo má odkaz, vidí hlasy, může hlasovat pro víc možností a hlas zase zrušit.
 drop policy if exists "cist hlasy" on public.votes;
 drop policy if exists "hlasovat" on public.votes;
 drop policy if exists "zmenit hlas" on public.votes;
+drop policy if exists "zrusit hlas" on public.votes;
 create policy "cist hlasy" on public.votes for select to anon using (true);
 create policy "hlasovat" on public.votes for insert to anon with check (true);
 create policy "zmenit hlas" on public.votes for update to anon using (true) with check (true);
+create policy "zrusit hlas" on public.votes for delete to anon using (true);
 
-grant select, insert, update on public.votes to anon;
+grant select, insert, update, delete on public.votes to anon;
 
 -- Společné odškrtávání: výřad družiny (v-*) a společná výstroj (s-*). Id musí sedět s js/hon.js.
 create table if not exists public.checks (
