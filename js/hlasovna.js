@@ -19,7 +19,6 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
 
   // --- Hlasovna: prezence nahoře ve valné hromadě (#hlasovna), hlasování u každého usnesení ([data-hv="id"]) ---
   var CREW = ['Mari', 'Smeky', 'Lencoš', 'Gregy', 'Jindřich', 'Pavel', 'Vlasta'];
-  var QUORUM = 4;
   var QUESTIONS = [
     { id: 'odjezd', title: 'Usnesení č. 1: odjezd z Prahy', options: [
       ['ct', 'Čtvrtek po obědě · Krügerl na přivítání, noc v Seewiesenu'],
@@ -111,7 +110,6 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
     return n;
   }
   function setStatus(msg, err) { statusMsg = msg; statusErr = !!err; render(); }
-  function hlasy(n) { return n === 1 ? '1 hlas' : n + ' hlasy'; }
   function goLogin() {
     setStatus('Nejdřív se vyber, pak můžeš hlasovat i odškrtávat.', true);
     var s = document.getElementById('hv-voter');
@@ -159,14 +157,11 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
       qv.forEach(function (v) { (counts[v.option] = counts[v.option] || []).push(v.voter); });
       var max = 0, leaders = [];
       q.options.forEach(function (o) { var c = (counts[o[0]] || []).length; if (c > max) { max = c; leaders = [o]; } else if (c === max && c > 0) leaders.push(o); });
-      // Nezávazná usnesení (trasy) jsou jen nálada: bez kvóra a bez vítěze, rozhoduje se na rozcestí
+      // Závazné usnesení se rozhodne, až hlasuje celá družina. Nezávazná (trasy) jsou jen nálada bez vítěze, rozhoduje se na rozcestí.
       var state = (q.mood ? 'Nezávazné · hlasovalo ' : 'Hlasovalo ') + voters + ' ze 7', ok = false;
-      if (!q.mood) {
-        if (voters > 0 && voters < QUORUM) state += ', do usnesení chybí ' + hlasy(QUORUM - voters);
-        else if (voters >= QUORUM && max > 0) {
-          if (leaders.length === 1) { state = 'Platí: ' + leaders[0][1].split(' · ')[0]; ok = true; }
-          else state = 'Rovnost, rozhoduje Jindřich';
-        }
+      if (!q.mood && voters === CREW.length && max > 0) {
+        if (leaders.length === 1) { state = 'Platí: ' + leaders[0][1].split(' · ')[0]; ok = true; }
+        else state = 'Rovnost, rozhoduje Jindřich';
       }
       var mine = qv.filter(function (v) { return v.voter === me; }).map(function (v) { return v.option; });
       var opts = q.options.map(function (o) {
