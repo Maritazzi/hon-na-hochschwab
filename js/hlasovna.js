@@ -18,7 +18,7 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
   ];
 
   // --- Hlasovna: prezence nahoře ve valné hromadě (#hlasovna), hlasování u každého usnesení ([data-hv="id"]) ---
-  var CREW = ['Mari', 'Smeky', 'Lencoš', 'Gregy', 'Jindřich', 'Pavel', 'Vlasta'];
+  var CREW = ['Mari', 'Smeky', 'Lencoš', 'Gregy', 'Jindřich', 'Pavel', 'Vlasta', 'Lukáš'];
   var QUESTIONS = [
     { id: 'odjezd', title: 'Usnesení č. 1: odjezd z Prahy', options: [
       ['ct', 'Čtvrtek po obědě · Krügerl na přivítání, noc v Seewiesenu'],
@@ -158,7 +158,7 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
       var max = 0, leaders = [];
       q.options.forEach(function (o) { var c = (counts[o[0]] || []).length; if (c > max) { max = c; leaders = [o]; } else if (c === max && c > 0) leaders.push(o); });
       // Závazné usnesení se rozhodne, až hlasuje celá družina. Nezávazná (trasy) jsou jen nálada bez vítěze, rozhoduje se na rozcestí.
-      var state = (q.mood ? 'Nezávazné · hlasovalo ' : 'Hlasovalo ') + voters + ' ze 7', ok = false;
+      var state = (q.mood ? 'Nezávazné · hlasovalo ' : 'Hlasovalo ') + voters + ' ze ' + CREW.length, ok = false;
       if (!q.mood && voters === CREW.length && max > 0) {
         if (leaders.length === 1) { state = 'Platí: ' + leaders[0][1].split(' · ')[0]; ok = true; }
         else state = 'Rovnost, rozhoduje Jindřich';
@@ -166,7 +166,7 @@ var SUPABASE_KEY = CFG.supabaseKey || '';
       var mine = qv.filter(function (v) { return v.voter === me; }).map(function (v) { return v.option; });
       var opts = q.options.map(function (o) {
         var who = counts[o[0]] || [];
-        var pct = Math.round(who.length / 7 * 100);
+        var pct = Math.round(who.length / CREW.length * 100);
         var b = el('button', { type: 'button', class: 'hv-opt' + (mine.indexOf(o[0]) >= 0 ? ' mine' : ''), 'aria-pressed': mine.indexOf(o[0]) >= 0 ? 'true' : 'false',
           onclick: function () { castVote(q.id, o[0]); } }, [
           el('span', { class: 'bar', style: 'width:' + pct + '%' }),

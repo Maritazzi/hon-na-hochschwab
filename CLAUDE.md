@@ -1,6 +1,6 @@
 # Hon na Hochschwab: pokyny pro Claude Code
 
-Statická stránka (bez buildu a bez frameworku) pro sedm kamarádů z Prahy: třídenní přechod Hochschwabu ve Štýrsku v červnu 2027, pojatý jako satirická pozvánka na hon. Hostuje se na GitHub Pages, hlasování běží přes Supabase.
+Statická stránka (bez buildu a bez frameworku) pro osm kamarádů z Prahy: třídenní přechod Hochschwabu ve Štýrsku v červnu 2027, pojatý jako satirická pozvánka na hon. Hostuje se na GitHub Pages, hlasování běží přes Supabase.
 
 ## Struktura
 
@@ -35,8 +35,8 @@ gh api -X POST "repos/{owner}/hon-na-hochschwab/pages" -f "source[branch]=main" 
 - Píše se česky. Vypravěčem a průvodcem je rakouský Oberjäger Sepp Gamsbichler, který vede pražskou družinu. Nikde nepiš, že je smyšlený.
 - Hlas: Sepp v uvozovkách a ve svém úvodu v záhlaví družině vyká („vy“). Všechno ostatní je psané za družinu („my“, „uvidíme“, „jdeme“). Výjimka jsou ovládací prvky a nápovědy u prezence, hlasování a odškrtávání: ty tykají jednotlivci („Vyber se“, „Hlasuješ jako…“), jsou to kamarádi. Sepp o sobě občas mluví ve třetí osobě, to je jeho styl.
 - Humor je česká satira „na hraně“, ne poučky. Heslo zní „Všechno nejlepší hned!“, německy „Alles Gute sofort!“.
-- Družina má 7 lidí: Mari (Dan, autor oběžníku), Smeky, Lencoš, Gregy, Jindřich, Pavel, Vlasta. Ondra není člen družiny ani nehlasuje. Je zvěd ze spřátelené party, který revír prošel v roce 2024.
-- Leče jsou popsané jen jednou, jako rozbalovací bloky v „Hon v kostce“ (`details.lec`, id `lec-1` až `lec-3`): zavřené ukazují název, km, převýšení, čas a jednu větu, rozbalené profil, rozkaz dne a mapy. Obsahují jen základní trasu (1A, 2A a 3. leč). Varianty (1B, 1C, 2B–2D) a odjezd čtvrtek/pátek patří jen do valné hromady, varianty tras jsou tam sbalené (`details.var`). Trasy jsou orientační: usnesení č. 3 a 4 jsou nezávazná, jen nálada bez vítěze, rozhoduje se na rozcestí. Ostatní usnesení (odjezd, termín, Krügerl, hymna, východ slunce) se rozhodnou, až hlasuje všech sedm.
+- Družina má 8 lidí: Mari (Dan, autor oběžníku), Smeky, Lencoš, Gregy, Jindřich, Pavel, Vlasta a nováček Lukáš (Lukáš G., jede poprvé, proto Jagdanwärter, myslivecký čekatel, který musí ukázat odolnost a na Schüsseltriebu ho čeká pasování na myslivce). Ondra není člen družiny ani nehlasuje. Je zvěd ze spřátelené party, který revír prošel v roce 2024.
+- Leče jsou popsané jen jednou, jako rozbalovací bloky v „Hon v kostce“ (`details.lec`, id `lec-1` až `lec-3`): zavřené ukazují název, km, převýšení, čas a jednu větu, rozbalené profil, rozkaz dne a mapy. Obsahují jen základní trasu (1A, 2A a 3. leč). Varianty (1B, 1C, 2B–2D) a odjezd čtvrtek/pátek patří jen do valné hromady, varianty tras jsou tam sbalené (`details.var`). Trasy jsou orientační: usnesení č. 3 a 4 jsou nezávazná, jen nálada bez vítěze, rozhoduje se na rozcestí. Ostatní usnesení (odjezd, termín, Krügerl, hymna, východ slunce) se rozhodnou, až hlasuje všech osm.
 - Seppova vlastivěda (`#vlastiveda`) jsou historky ze starého Rakouska a Štýrska, které Sepp vypráví v uvozovkách. Fakta v nich musí být ověřená a se zdrojem v patičce, vtip je v pointě.
 - Pes nejede. Mari kameny tahat nechce, je to jen vtip ve skupině.
 

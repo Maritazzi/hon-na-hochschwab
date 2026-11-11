@@ -3,7 +3,7 @@
 
 create table if not exists public.votes (
   question   text not null check (question in ('odjezd', 'termin', 'lec1', 'lec2', 'pivo', 'hymna', 'vychod')),
-  voter      text not null check (voter in ('Mari', 'Smeky', 'Lencoš', 'Gregy', 'Jindřich', 'Pavel', 'Vlasta')),
+  voter      text not null check (voter in ('Mari', 'Smeky', 'Lencoš', 'Gregy', 'Jindřich', 'Pavel', 'Vlasta', 'Lukáš')),
   option     text not null,
   updated_at timestamptz not null default now(),
   primary key (question, voter, option),
@@ -38,7 +38,7 @@ create table if not exists public.checks (
                'v-foelz', 'v-foelzk', 'v-karl', 'v-hs', 'v-hut', 'v-sev', 'v-kraut',
                's-grasser', 's-schiestl', 's-schuster', 's-znamky', 's-karty', 's-stan')),
   done       boolean not null default false,
-  who        text check (who in ('Mari', 'Smeky', 'Lencoš', 'Gregy', 'Jindřich', 'Pavel', 'Vlasta')),
+  who        text check (who in ('Mari', 'Smeky', 'Lencoš', 'Gregy', 'Jindřich', 'Pavel', 'Vlasta', 'Lukáš')),
   updated_at timestamptz not null default now()
 );
 

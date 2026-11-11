@@ -29,7 +29,7 @@ Ručně:
 
 Když měníš otázky nebo možnosti v `js/hlasovna.js`, musí sedět i check constrainty v databázi. Změny se dělají migrací ze složky `supabase/` (`migrace-*.sql`), kterou spustíš v SQL Editoru.
 
-Tabulka dovolí jen číst hlasy, hlasovat pro víc možností a hlas zase zrušit, a to jen za sedm jmen z družiny. Kdo má odkaz, může hlasovat za kohokoli z nich, takže je to hlasování mezi kamarády. Projekt zdarma se uspí po týdnu bez provozu. V Supabase ho pak jedním klikem probudíš.
+Tabulka dovolí jen číst hlasy, hlasovat pro víc možností a hlas zase zrušit, a to jen za osm jmen z družiny. Kdo má odkaz, může hlasovat za kohokoli z nich, takže je to hlasování mezi kamarády. Projekt zdarma se uspí po týdnu bez provozu. V Supabase ho pak jedním klikem probudíš.
 
 ## Dechovka
 

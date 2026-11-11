@@ -122,6 +122,7 @@ class Component extends DCLogic {
       'Devátý. Vlasta vybaluje plnou polní.',
       'Desátý. Sepp vidí dva Hochschwaby a na oba chce ráno vylézt.',
       'Jedenáctý. Dechovka hraje Rosamunde potřetí. Nikomu to nevadí.',
+      'Dvanáctý. Lukáš pořád stojí. Zkouška odolnosti splněna, Sepp chystá pasování.',
       'Sepp vám bere Krügerl a nese Himbeerkracherl. Ne kvůli vám. Ten Krügerl chtěl on.'
     ];
     var kr = s.kr || 0;
